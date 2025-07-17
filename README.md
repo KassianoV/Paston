@@ -57,17 +57,9 @@ O script lerá o arquivo `exemplo.pas`, executará todas as fases do compilador 
 --- Geração de Código Concluída! ---
 
 Código Intermediário Gerado (TAC):
-
-t0 := 123
-aluno_temp.matricula := t0
-
-t1 := 8.5
-aluno_temp.media := t1
-
-minha_turma[1] := aluno_temp
-
-t2 := 456
-minha_turma[2].matricula := t2
+t0 := b * 2
+t1 := a + t0
+x := t1
 ```
 
 ---
@@ -158,12 +150,6 @@ Cada linha representa uma operação simples, com no máximo três elementos: de
 
 ---
 
-## 🧑‍💻 Contribuindo
-
-Contribuições são bem-vindas! Sinta-se livre para abrir issues ou pull requests para correções, melhorias ou novas funcionalidades.
-
----
-
 ## 📄 Licença
 
-Este projeto é distribuído sob a licença MIT. Consulte o arquivo `LICENSE` para mais detalhes.
+Este projeto é de dominio do Kassiano Vieira 
