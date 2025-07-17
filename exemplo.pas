@@ -34,5 +34,5 @@ begin
 
     # Atribuição direta a um campo de um elemento do array.
     sala_a[2].media := 7.5;
-
+~
 end;

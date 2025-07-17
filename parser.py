@@ -1,5 +1,3 @@
-# parser.py - Versão Final com Gramática Corrigida (sem recursão infinita)
-
 import ply.yacc as yacc
 from lexer import lexer, tokens
 
@@ -107,7 +105,6 @@ def p_lista_declaracoes(p):
     '''lista_declaracoes : lista_declaracoes declaracao
                          | empty'''
     if len(p) == 3 and p[2]:
-        # Se p[2] for uma lista (de um bloco type/var), concatena. Se for um item, adiciona.
         p[0] = p[1] + p[2] if isinstance(p[2], list) else p[1] + [p[2]]
     else:
         p[0] = []
@@ -130,14 +127,12 @@ def p_lista_comandos(p):
     else:
         p[0] = []
 
-# --- REGRA DE COMANDO CORRIGIDA (sem recursão infinita) ---
 def p_comando(p):
     '''comando : atribuicao
                | return_statement
                | function_call SEMI'''
     p[0] = p[1]
 
-# --- BLOCOS DE DECLARAÇÃO ---
 def p_type_declaration_block(p):
     '''type_declaration_block : TYPE type_definition_list'''
     p[0] = p[2]
@@ -196,7 +191,6 @@ def p_tipo_specifier(p):
                       | ID'''
     p[0] = p[1]
 
-# --- ATRIBUIÇÃO E LVALUE ---
 def p_atribuicao(p):
     '''atribuicao : lvalue ATRIB expressao SEMI'''
     p[0] = Atribuicao(var=p[1], expressao=p[3])
@@ -215,7 +209,6 @@ def p_record_access(p):
     '''record_access : lvalue DOT ID'''
     p[0] = RecordAccess(var=p[1], campo=Variavel(p[3]))
 
-# --- FUNÇÕES ---
 def p_function_declaration(p):
     '''function_declaration : DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body'''
     p[0] = FunctionDecl(nome=p[2], params=p[4], tipo_retorno=p[6], corpo=p[7])
@@ -254,7 +247,6 @@ def p_tipo_retorno_opt(p):
     if len(p) == 4: p[0] = p[3]
     else: p[0] = 'void'
 
-# --- EXPRESSÕES ---
 def p_expressao(p):
     '''expressao : expressao PLUS expressao
                  | expressao MINUS expressao
@@ -431,7 +423,7 @@ class AnalisadorSemantico:
             if tipo_esperado != tipo_passado: raise Exception(f"Erro de Tipo: Argumento {i+1} da função '{nome_func}' deveria ser do tipo '{tipo_esperado}', mas é do tipo '{tipo_passado}'.")
         return info_func['tipo_retorno']
 
-    def visitar_Atribuicao(self, no):
+    def visitar_Atribuicao(self, no): # aqui tava com "lvalue"
         tipo_expressao = self.visitar(no.expressao)
         tipo_lhs = self.visitar(no.var)
         if tipo_lhs != tipo_expressao:
@@ -471,32 +463,71 @@ class InstrucaoTAC:
         else: return f"{self.op} {self.arg1} {self.arg2} {self.dest}"
 
 class GeradorCI:
-    def __init__(self): self.codigo = []; self.contador_temp = 0
-    def novo_temp(self): nome_temp = f"t{self.contador_temp}"; self.contador_temp += 1; return nome_temp
+    def __init__(self):
+        self.codigo = []
+        self.contador_temp = 0
+    
+    def novo_temp(self):
+        nome_temp = f"t{self.contador_temp}"
+        self.contador_temp += 1
+        return nome_temp
+    
     def visitar(self, no):
         if no is None: return
         if isinstance(no, list):
             for item in no: self.visitar(item)
             return
-        nome_metodo = f'visitar_{type(no).__name__}'; visitante = getattr(self, nome_metodo, self.erro_generico); return visitante(no)
-    def erro_generico(self, no): pass
+        nome_metodo = f'visitar_{type(no).__name__}'
+        visitante = getattr(self, nome_metodo, self.erro_generico)
+        return visitante(no)
+        
+    def erro_generico(self, no):
+
+        pass
+        
     def visitar_Programa(self, no):
         self.visitar(no.declaracoes)
         self.visitar(no.corpo)
+        
     def visitar_Atribuicao(self, no):
         loc_expr = self.visitar(no.expressao)
-        dest = self.visitar(no.lvalue)
-        instr = InstrucaoTAC(':=', loc_expr, None, dest); self.codigo.append(instr)
-    def visitar_OperacaoBinaria(self, no): loc_esq = self.visitar(no.esq); loc_dir = self.visitar(no.dir); temp_dest = self.novo_temp(); instr = InstrucaoTAC(no.op, loc_esq, loc_dir, temp_dest); self.codigo.append(instr); return temp_dest
-    def visitar_Numero(self, no): return no.valor
-    def visitar_Variavel(self, no): return no.nome
-    def visitar_ArrayAccess(self, no): indice_loc = self.visitar(no.indice); return f"{no.var.nome}[{indice_loc}]"
-    def visitar_RecordAccess(self, no): base_loc = self.visitar(no.var); return f"{base_loc}.{no.campo.nome}"
+        dest = self.visitar(no.var) # tava aqui o erro
+        instr = InstrucaoTAC(':=', loc_expr, None, dest)
+        self.codigo.append(instr)
+        
+    def visitar_OperacaoBinaria(self, no):
+        loc_esq = self.visitar(no.esq)
+        loc_dir = self.visitar(no.dir)
+        temp_dest = self.novo_temp()
+        instr = InstrucaoTAC(no.op, loc_esq, loc_dir, temp_dest)
+        self.codigo.append(instr)
+        return temp_dest
+        
+    def visitar_Numero(self, no):
+        return no.valor
+        
+    def visitar_Variavel(self, no):
+        return no.nome
+        
+    def visitar_ArrayAccess(self, no):
+        indice_loc = self.visitar(no.indice)
+        return f"{no.var.nome}[{indice_loc}]"
+        
+    def visitar_RecordAccess(self, no):
+        base_loc = self.visitar(no.var)
+        return f"{base_loc}.{no.campo.nome}"
+        
     def visitar_FunctionCall(self, no):
-        args_locs = [self.visitar(arg) for arg in no.args];
-        for loc in reversed(args_locs): self.codigo.append(InstrucaoTAC('param', loc, None, None))
-        temp_retorno = self.novo_temp(); self.codigo.append(InstrucaoTAC('call', no.nome, len(args_locs), temp_retorno)); return temp_retorno
-    def visitar_ReturnStmt(self, no): loc_expr = self.visitar(no.expressao); self.codigo.append(InstrucaoTAC('return', loc_expr, None, None))
+        args_locs = [self.visitar(arg) for arg in no.args]
+        for loc in reversed(args_locs):
+            self.codigo.append(InstrucaoTAC('param', loc, None, None))
+        temp_retorno = self.novo_temp()
+        self.codigo.append(InstrucaoTAC('call', no.nome, len(args_locs), temp_retorno))
+        return temp_retorno
+        
+    def visitar_ReturnStmt(self, no):
+        loc_expr = self.visitar(no.expressao)
+        self.codigo.append(InstrucaoTAC('return', loc_expr, None, None))
 
 # --------------------------------------------------------------------
 # ETAPA FINAL: EXECUTAR TODAS AS FASES DO COMPILADOR
@@ -507,12 +538,16 @@ start = 'programa'
 
 parser = yacc.yacc()
 try:
+    # Lembre-se de ter um arquivo 'exemplo.pas' no mesmo diretório
     with open('exemplo.pas', 'r') as file:
         codigo = file.read()
     
     print("--- Iniciando Análise Sintática ---")
     arvore_sintatica = parser.parse(codigo, lexer=lexer)
-    print("--- Análise Sintática Concluída ---\n")
+    if arvore_sintatica is None:
+        print("\nErro sintático grave impediu a construção da AST. Verifique os erros acima.")
+    else:
+        print("--- Análise Sintática Concluída ---\n")
 
     if arvore_sintatica:
         print("--- Iniciando Análise Semântica ---")
@@ -528,10 +563,13 @@ try:
             print("--- Geração de Código Concluída! ---")
             
             print("\nCódigo Intermediário Gerado (TAC):")
+            if not codigo_intermediario:
+                print("(Nenhuma instrução gerada. O corpo do programa pode estar vazio.)")
             for instr in codigo_intermediario:
                 print(instr)
 
         except Exception as e:
             print(f"\nERRO: {e}")
+            
 except FileNotFoundError:
     print("Arquivo 'exemplo.pas' não encontrado. Crie um com código para testar.")
