@@ -1,15 +1,20 @@
-# parser.py - Versão Final com Suporte a Blocos de Declaração
+# parser.py - Versão Final com Gramática Corrigida (sem recursão infinita)
 
 import ply.yacc as yacc
 from lexer import lexer, tokens
 
 # --------------------------------------------------------------------
-# ETAPA 1: DEFINIÇÃO DAS CLASSES DA ÁRVORE DE SINTAXE ABSTRATA (AST)
+# ETAPA 1: CLASSES DA ÁRVORE DE SINTAXE ABSTRATA (AST)
 # --------------------------------------------------------------------
 
 class ASTNode:
     def __repr__(self):
         return f"{self.__class__.__name__}"
+
+class Programa(ASTNode):
+    def __init__(self, declaracoes, corpo):
+        self.declaracoes = declaracoes
+        self.corpo = corpo
 
 class DeclaracaoVar(ASTNode):
     def __init__(self, variaveis, tipo):
@@ -86,7 +91,7 @@ class RecordAccess(ASTNode):
         self.campo = campo
 
 # --------------------------------------------------------------------
-# ETAPA 2: PARSER (ANÁLISE SINTÁTICA) - SEÇÃO CORRIGIDA
+# ETAPA 2: PARSER (ANÁLISE SINTÁTICA) - GRAMÁTICA CORRIGIDA
 # --------------------------------------------------------------------
 
 precedence = (
@@ -94,23 +99,45 @@ precedence = (
     ('left', 'TIMES', 'DIVIDE'),
 )
 
-def p_lista_comandos(p):
-    '''lista_comandos : lista_comandos comando
-                      | empty'''
+def p_programa(p):
+    '''programa : lista_declaracoes corpo_principal'''
+    p[0] = Programa(declaracoes=p[1], corpo=p[2])
+
+def p_lista_declaracoes(p):
+    '''lista_declaracoes : lista_declaracoes declaracao
+                         | empty'''
     if len(p) == 3 and p[2]:
+        # Se p[2] for uma lista (de um bloco type/var), concatena. Se for um item, adiciona.
         p[0] = p[1] + p[2] if isinstance(p[2], list) else p[1] + [p[2]]
     else:
         p[0] = []
 
-def p_comando(p):
-    '''comando : declaracao_var_block
-               | atribuicao
-               | function_declaration
-               | return_statement
-               | type_declaration_block'''
+def p_declaracao(p):
+    '''declaracao : type_declaration_block
+                  | var_declaration_block
+                  | function_declaration'''
     p[0] = p[1]
 
-# --- NOVAS REGRAS CORRIGIDAS PARA BLOCOS 'type' e 'var' ---
+def p_corpo_principal(p):
+    '''corpo_principal : BEGIN lista_comandos END SEMI'''
+    p[0] = p[2]
+
+def p_lista_comandos(p):
+    '''lista_comandos : lista_comandos comando
+                      | empty'''
+    if len(p) == 3 and p[2]:
+        p[0] = p[1] + [p[2]]
+    else:
+        p[0] = []
+
+# --- REGRA DE COMANDO CORRIGIDA (sem recursão infinita) ---
+def p_comando(p):
+    '''comando : atribuicao
+               | return_statement
+               | function_call SEMI'''
+    p[0] = p[1]
+
+# --- BLOCOS DE DECLARAÇÃO ---
 def p_type_declaration_block(p):
     '''type_declaration_block : TYPE type_definition_list'''
     p[0] = p[2]
@@ -125,34 +152,17 @@ def p_single_type_definition(p):
     '''single_type_definition : ID EQUAL_TO type_definition SEMI'''
     p[0] = TypeDecl(nome=p[1], definicao_tipo=p[3])
 
-
 def p_type_definition(p):
     '''type_definition : array_type_definition
                        | record_type_definition'''
     p[0] = p[1]
-
-def p_declaracao_var_block(p):
-    '''declaracao_var_block : VAR var_declaration_list'''
-    p[0] = p[2]
-
-# Esta regra agora é usada dentro dos blocos 'var' e de funções
-def p_var_declaration_list(p):
-    '''var_declaration_list : var_declaration_list declaracao_var
-                           | declaracao_var'''
-    if len(p) == 3: p[0] = p[1] + [p[2]]
-    else: p[0] = [p[1]]
-
-def p_declaracao_var(p):
-    '''declaracao_var : ID COLON tipo_specifier SEMI'''
-    p[0] = DeclaracaoVar(variaveis=[Variavel(p[1])], tipo=p[3])
-
 
 def p_array_type_definition(p):
     '''array_type_definition : ARRAY LBRACKET NUMERO RBRACKET OF tipo_specifier'''
     p[0] = ArrayType(tamanho=p[3], tipo_base=p[6])
 
 def p_record_type_definition(p):
-    '''record_type_definition : RECORD field_list END SEMI'''
+    '''record_type_definition : RECORD field_list END'''
     p[0] = RecordType(campos=p[2])
 
 def p_field_list(p):
@@ -165,6 +175,20 @@ def p_field_declaration(p):
     '''field_declaration : ID COLON tipo_specifier SEMI'''
     p[0] = Param(Variavel(p[1]), p[3])
 
+def p_var_declaration_block(p):
+    '''var_declaration_block : VAR var_declaration_list'''
+    p[0] = p[2]
+
+def p_var_declaration_list(p):
+    '''var_declaration_list : var_declaration_list declaracao_var
+                           | declaracao_var'''
+    if len(p) == 3: p[0] = p[1] + [p[2]]
+    else: p[0] = [p[1]]
+
+def p_declaracao_var(p):
+    '''declaracao_var : ID COLON tipo_specifier SEMI'''
+    p[0] = DeclaracaoVar(variaveis=[Variavel(p[1])], tipo=p[3])
+
 def p_tipo_specifier(p):
     '''tipo_specifier : INTEGER
                       | REAL
@@ -172,22 +196,38 @@ def p_tipo_specifier(p):
                       | ID'''
     p[0] = p[1]
 
+# --- ATRIBUIÇÃO E LVALUE ---
 def p_atribuicao(p):
-    '''atribuicao : Variavel ATRIB expressao SEMI'''
+    '''atribuicao : lvalue ATRIB expressao SEMI'''
     p[0] = Atribuicao(var=p[1], expressao=p[3])
 
+def p_lvalue(p):
+    '''lvalue : ID
+              | array_access
+              | record_access'''
+    p[0] = p[1] if isinstance(p[1], ASTNode) else Variavel(p[1])
+
+def p_array_access(p):
+    '''array_access : ID LBRACKET expressao RBRACKET'''
+    p[0] = ArrayAccess(var=Variavel(p[1]), indice=p[3])
+
+def p_record_access(p):
+    '''record_access : lvalue DOT ID'''
+    p[0] = RecordAccess(var=p[1], campo=Variavel(p[3]))
+
+# --- FUNÇÕES ---
 def p_function_declaration(p):
     '''function_declaration : DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body'''
     p[0] = FunctionDecl(nome=p[2], params=p[4], tipo_retorno=p[6], corpo=p[7])
 
+def p_var_declarations_opt(p):
+    '''var_declarations_opt : var_declaration_block
+                            | empty'''
+    p[0] = p[1]
+
 def p_function_body(p):
     '''function_body : var_declarations_opt BEGIN lista_comandos END SEMI'''
     p[0] = FunctionBody(declaracoes_locais=p[1], comandos=p[3])
-
-def p_var_declarations_opt(p):
-    '''var_declarations_opt : VAR var_declaration_list
-                           | empty'''
-    p[0] = p[2] if len(p) > 2 else []
 
 def p_return_statement(p):
     '''return_statement : RETURN expressao SEMI'''
@@ -214,6 +254,7 @@ def p_tipo_retorno_opt(p):
     if len(p) == 4: p[0] = p[3]
     else: p[0] = 'void'
 
+# --- EXPRESSÕES ---
 def p_expressao(p):
     '''expressao : expressao PLUS expressao
                  | expressao MINUS expressao
@@ -229,24 +270,13 @@ def p_termo(p):
     '''termo : LPAREN expressao RPAREN
              | NUMERO
              | function_call
-             | Variavel'''
-    if len(p) == 4: p[0] = p[2]
-    elif isinstance(p[1], (int, float)): p[0] = Numero(p[1])
-    else: p[0] = p[1]
-
-def p_Variavel(p):
-    '''Variavel : ID
-                | array_access
-                | record_access'''
-    p[0] = p[1] if isinstance(p[1], ASTNode) else Variavel(p[1])
-
-def p_record_access(p):
-    '''record_access : Variavel DOT ID'''
-    p[0] = RecordAccess(var=p[1], campo=Variavel(p[3]))
-
-def p_array_access(p):
-    '''array_access : ID LBRACKET expressao RBRACKET'''
-    p[0] = ArrayAccess(var=Variavel(p[1]), indice=p[3])
+             | lvalue'''
+    if len(p) == 4:
+        p[0] = p[2]
+    elif isinstance(p[1], (int, float)):
+        p[0] = Numero(p[1])
+    else:
+        p[0] = p[1]
 
 def p_function_call(p):
     '''function_call : ID LPAREN args_opt RPAREN'''
@@ -265,7 +295,7 @@ def p_args(p):
 
 def p_empty(p):
     'empty :'
-    pass
+    p[0] = None
 
 def p_error(p):
     if p: print(f"Erro de sintaxe no token '{p.value}' (tipo: {p.type}) na linha {p.lineno}")
@@ -282,18 +312,15 @@ class AnalisadorSemantico:
 
     def visitar(self, no):
         if no is None: return
-        # Lida com listas de nós (como lista_comandos, que pode ser uma lista de listas)
         if isinstance(no, list):
-            for item in no:
-                self.visitar(item)
+            for item in no: self.visitar(item)
             return
-
         nome_metodo = f'visitar_{type(no).__name__}'
         visitante = getattr(self, nome_metodo, self.erro_generico)
         return visitante(no)
 
     def erro_generico(self, no):
-        raise Exception(f'Nenhum método visitar_{type(no).__name__} encontrado')
+        raise Exception(f'Nenhum método visitar_{type(no).__name__} encontrado para {no}')
 
     def abrir_escopo(self): self.pilha_escopos.append({})
     def fechar_escopo(self): self.pilha_escopos.pop()
@@ -307,6 +334,10 @@ class AnalisadorSemantico:
         for escopo in reversed(self.pilha_escopos):
             if nome in escopo: return escopo[nome]
         return None
+    
+    def visitar_Programa(self, no):
+        self.visitar(no.declaracoes)
+        self.visitar(no.corpo)
 
     def visitar_TypeDecl(self, no):
         nome_tipo = no.nome
@@ -449,9 +480,12 @@ class GeradorCI:
             return
         nome_metodo = f'visitar_{type(no).__name__}'; visitante = getattr(self, nome_metodo, self.erro_generico); return visitante(no)
     def erro_generico(self, no): pass
+    def visitar_Programa(self, no):
+        self.visitar(no.declaracoes)
+        self.visitar(no.corpo)
     def visitar_Atribuicao(self, no):
         loc_expr = self.visitar(no.expressao)
-        dest = self.visitar(no.var)
+        dest = self.visitar(no.lvalue)
         instr = InstrucaoTAC(':=', loc_expr, None, dest); self.codigo.append(instr)
     def visitar_OperacaoBinaria(self, no): loc_esq = self.visitar(no.esq); loc_dir = self.visitar(no.dir); temp_dest = self.novo_temp(); instr = InstrucaoTAC(no.op, loc_esq, loc_dir, temp_dest); self.codigo.append(instr); return temp_dest
     def visitar_Numero(self, no): return no.valor
@@ -467,6 +501,10 @@ class GeradorCI:
 # --------------------------------------------------------------------
 # ETAPA FINAL: EXECUTAR TODAS AS FASES DO COMPILADOR
 # --------------------------------------------------------------------
+
+# Define o ponto de partida da gramática
+start = 'programa'
+
 parser = yacc.yacc()
 try:
     with open('exemplo.pas', 'r') as file:

@@ -20,1734 +20,1724 @@ Unused terminals:
 
 Grammar
 
-Rule 0     S' -> lista_comandos
-Rule 1     lista_comandos -> lista_comandos comando
-Rule 2     lista_comandos -> empty
-Rule 3     comando -> declaracao_var_block
-Rule 4     comando -> atribuicao
-Rule 5     comando -> function_declaration
-Rule 6     comando -> return_statement
-Rule 7     comando -> type_declaration_block
-Rule 8     type_declaration_block -> TYPE type_definition_list
-Rule 9     type_definition_list -> type_definition_list single_type_definition
-Rule 10    type_definition_list -> single_type_definition
-Rule 11    single_type_definition -> ID EQUAL_TO type_definition SEMI
-Rule 12    type_definition -> array_type_definition
-Rule 13    type_definition -> record_type_definition
-Rule 14    declaracao_var_block -> VAR var_declaration_list
-Rule 15    var_declaration_list -> var_declaration_list declaracao_var
-Rule 16    var_declaration_list -> declaracao_var
-Rule 17    declaracao_var -> ID COLON tipo_specifier SEMI
-Rule 18    array_type_definition -> ARRAY LBRACKET NUMERO RBRACKET OF tipo_specifier
-Rule 19    record_type_definition -> RECORD field_list END SEMI
-Rule 20    field_list -> field_list field_declaration
-Rule 21    field_list -> empty
-Rule 22    field_declaration -> ID COLON tipo_specifier SEMI
-Rule 23    tipo_specifier -> INTEGER
-Rule 24    tipo_specifier -> REAL
-Rule 25    tipo_specifier -> STRING
-Rule 26    tipo_specifier -> ID
-Rule 27    atribuicao -> Variavel ATRIB expressao SEMI
-Rule 28    function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body
-Rule 29    function_body -> var_declarations_opt BEGIN lista_comandos END SEMI
-Rule 30    var_declarations_opt -> VAR var_declaration_list
-Rule 31    var_declarations_opt -> empty
-Rule 32    return_statement -> RETURN expressao SEMI
-Rule 33    params_opt -> params
-Rule 34    params_opt -> empty
-Rule 35    params -> params COMMA param
-Rule 36    params -> param
-Rule 37    param -> ID COLON tipo_specifier
-Rule 38    tipo_retorno_opt -> COLON COLON tipo_specifier
-Rule 39    tipo_retorno_opt -> empty
-Rule 40    expressao -> expressao PLUS expressao
-Rule 41    expressao -> expressao MINUS expressao
-Rule 42    expressao -> expressao TIMES expressao
-Rule 43    expressao -> expressao DIVIDE expressao
-Rule 44    expressao -> termo
-Rule 45    termo -> LPAREN expressao RPAREN
-Rule 46    termo -> NUMERO
-Rule 47    termo -> function_call
-Rule 48    termo -> Variavel
-Rule 49    Variavel -> ID
-Rule 50    Variavel -> array_access
-Rule 51    Variavel -> record_access
-Rule 52    record_access -> Variavel DOT ID
-Rule 53    array_access -> ID LBRACKET expressao RBRACKET
-Rule 54    function_call -> ID LPAREN args_opt RPAREN
-Rule 55    args_opt -> args
-Rule 56    args_opt -> empty
-Rule 57    args -> args COMMA expressao
-Rule 58    args -> expressao
-Rule 59    empty -> <empty>
+Rule 0     S' -> programa
+Rule 1     programa -> lista_declaracoes corpo_principal
+Rule 2     lista_declaracoes -> lista_declaracoes declaracao
+Rule 3     lista_declaracoes -> empty
+Rule 4     declaracao -> type_declaration_block
+Rule 5     declaracao -> var_declaration_block
+Rule 6     declaracao -> function_declaration
+Rule 7     corpo_principal -> BEGIN lista_comandos END SEMI
+Rule 8     lista_comandos -> lista_comandos comando
+Rule 9     lista_comandos -> empty
+Rule 10    comando -> atribuicao
+Rule 11    comando -> return_statement
+Rule 12    comando -> function_call SEMI
+Rule 13    type_declaration_block -> TYPE type_definition_list
+Rule 14    type_definition_list -> type_definition_list single_type_definition
+Rule 15    type_definition_list -> single_type_definition
+Rule 16    single_type_definition -> ID EQUAL_TO type_definition SEMI
+Rule 17    type_definition -> array_type_definition
+Rule 18    type_definition -> record_type_definition
+Rule 19    array_type_definition -> ARRAY LBRACKET NUMERO RBRACKET OF tipo_specifier
+Rule 20    record_type_definition -> RECORD field_list END
+Rule 21    field_list -> field_list field_declaration
+Rule 22    field_list -> empty
+Rule 23    field_declaration -> ID COLON tipo_specifier SEMI
+Rule 24    var_declaration_block -> VAR var_declaration_list
+Rule 25    var_declaration_list -> var_declaration_list declaracao_var
+Rule 26    var_declaration_list -> declaracao_var
+Rule 27    declaracao_var -> ID COLON tipo_specifier SEMI
+Rule 28    tipo_specifier -> INTEGER
+Rule 29    tipo_specifier -> REAL
+Rule 30    tipo_specifier -> STRING
+Rule 31    tipo_specifier -> ID
+Rule 32    atribuicao -> lvalue ATRIB expressao SEMI
+Rule 33    lvalue -> ID
+Rule 34    lvalue -> array_access
+Rule 35    lvalue -> record_access
+Rule 36    array_access -> ID LBRACKET expressao RBRACKET
+Rule 37    record_access -> lvalue DOT ID
+Rule 38    function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body
+Rule 39    var_declarations_opt -> var_declaration_block
+Rule 40    var_declarations_opt -> empty
+Rule 41    function_body -> var_declarations_opt BEGIN lista_comandos END SEMI
+Rule 42    return_statement -> RETURN expressao SEMI
+Rule 43    params_opt -> params
+Rule 44    params_opt -> empty
+Rule 45    params -> params COMMA param
+Rule 46    params -> param
+Rule 47    param -> ID COLON tipo_specifier
+Rule 48    tipo_retorno_opt -> COLON COLON tipo_specifier
+Rule 49    tipo_retorno_opt -> empty
+Rule 50    expressao -> expressao PLUS expressao
+Rule 51    expressao -> expressao MINUS expressao
+Rule 52    expressao -> expressao TIMES expressao
+Rule 53    expressao -> expressao DIVIDE expressao
+Rule 54    expressao -> termo
+Rule 55    termo -> LPAREN expressao RPAREN
+Rule 56    termo -> NUMERO
+Rule 57    termo -> function_call
+Rule 58    termo -> lvalue
+Rule 59    function_call -> ID LPAREN args_opt RPAREN
+Rule 60    args_opt -> args
+Rule 61    args_opt -> empty
+Rule 62    args -> args COMMA expressao
+Rule 63    args -> expressao
+Rule 64    empty -> <empty>
 
 Terminals, with rules where they appear
 
-ARRAY                : 18
-ATRIB                : 27
-BEGIN                : 29
-COLON                : 17 22 37 38 38
-COMMA                : 35 57
+ARRAY                : 19
+ATRIB                : 32
+BEGIN                : 7 41
+COLON                : 23 27 47 48 48
+COMMA                : 45 62
 CONST                : 
 CONST_VALOR          : 
-DEF                  : 28
-DIVIDE               : 43
+DEF                  : 38
+DIVIDE               : 53
 DO                   : 
-DOT                  : 52
+DOT                  : 37
 ELSE                 : 
-END                  : 19 29
+END                  : 7 20 41
 EQUAL                : 
-EQUAL_TO             : 11
+EQUAL_TO             : 16
 GREATER_THAN         : 
 GREATER_THAN_OR_EQUAL : 
-ID                   : 11 17 22 26 28 37 49 52 53 54
+ID                   : 16 23 27 31 33 36 37 38 47 59
 IF                   : 
-INTEGER              : 23
-LBRACKET             : 18 53
+INTEGER              : 28
+LBRACKET             : 19 36
 LESS_THAN            : 
 LESS_THAN_OR_EQUAL   : 
-LPAREN               : 28 45 54
-MINUS                : 41
+LPAREN               : 38 55 59
+MINUS                : 51
 NOT_EQUAL_TO         : 
-NUMERO               : 18 46
-OF                   : 18
-PLUS                 : 40
-RBRACKET             : 18 53
+NUMERO               : 19 56
+OF                   : 19
+PLUS                 : 50
+RBRACKET             : 19 36
 READ                 : 
-REAL                 : 24
-RECORD               : 19
-RETURN               : 32
-RPAREN               : 28 45 54
-SEMI                 : 11 17 19 22 27 29 32
-STRING               : 25
+REAL                 : 29
+RECORD               : 20
+RETURN               : 42
+RPAREN               : 38 55 59
+SEMI                 : 7 12 16 23 27 32 41 42
+STRING               : 30
 THEN                 : 
-TIMES                : 42
-TYPE                 : 8
-VAR                  : 14 30
+TIMES                : 52
+TYPE                 : 13
+VAR                  : 24
 WHILE                : 
 WRITE                : 
 error                : 
 
 Nonterminals, with rules where they appear
 
-Variavel             : 27 48 52
-args                 : 55 57
-args_opt             : 54
-array_access         : 50
-array_type_definition : 12
-atribuicao           : 4
-comando              : 1
-declaracao_var       : 15 16
-declaracao_var_block : 3
-empty                : 2 21 31 34 39 56
-expressao            : 27 32 40 40 41 41 42 42 43 43 45 53 57 58
-field_declaration    : 20
-field_list           : 19 20
-function_body        : 28
-function_call        : 47
-function_declaration : 5
-lista_comandos       : 1 29 0
-param                : 35 36
-params               : 33 35
-params_opt           : 28
-record_access        : 51
-record_type_definition : 13
-return_statement     : 6
-single_type_definition : 9 10
-termo                : 44
-tipo_retorno_opt     : 28
-tipo_specifier       : 17 18 22 37 38
-type_declaration_block : 7
-type_definition      : 11
-type_definition_list : 8 9
-var_declaration_list : 14 15 30
-var_declarations_opt : 29
+args                 : 60 62
+args_opt             : 59
+array_access         : 34
+array_type_definition : 17
+atribuicao           : 10
+comando              : 8
+corpo_principal      : 1
+declaracao           : 2
+declaracao_var       : 25 26
+empty                : 3 9 22 40 44 49 61
+expressao            : 32 36 42 50 50 51 51 52 52 53 53 55 62 63
+field_declaration    : 21
+field_list           : 20 21
+function_body        : 38
+function_call        : 12 57
+function_declaration : 6
+lista_comandos       : 7 8 41
+lista_declaracoes    : 1 2
+lvalue               : 32 37 58
+param                : 45 46
+params               : 43 45
+params_opt           : 38
+programa             : 0
+record_access        : 35
+record_type_definition : 18
+return_statement     : 11
+single_type_definition : 14 15
+termo                : 54
+tipo_retorno_opt     : 38
+tipo_specifier       : 19 23 27 47 48
+type_declaration_block : 4
+type_definition      : 16
+type_definition_list : 13 14
+var_declaration_block : 5 39
+var_declaration_list : 24 25
+var_declarations_opt : 41
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . lista_comandos
-    (1) lista_comandos -> . lista_comandos comando
-    (2) lista_comandos -> . empty
-    (59) empty -> .
+    (0) S' -> . programa
+    (1) programa -> . lista_declaracoes corpo_principal
+    (2) lista_declaracoes -> . lista_declaracoes declaracao
+    (3) lista_declaracoes -> . empty
+    (64) empty -> .
 
-    VAR             reduce using rule 59 (empty -> .)
-    DEF             reduce using rule 59 (empty -> .)
-    RETURN          reduce using rule 59 (empty -> .)
-    TYPE            reduce using rule 59 (empty -> .)
-    ID              reduce using rule 59 (empty -> .)
-    $end            reduce using rule 59 (empty -> .)
+    BEGIN           reduce using rule 64 (empty -> .)
+    TYPE            reduce using rule 64 (empty -> .)
+    VAR             reduce using rule 64 (empty -> .)
+    DEF             reduce using rule 64 (empty -> .)
 
-    lista_comandos                 shift and go to state 1
-    empty                          shift and go to state 2
+    programa                       shift and go to state 1
+    lista_declaracoes              shift and go to state 2
+    empty                          shift and go to state 3
 
 state 1
 
-    (0) S' -> lista_comandos .
-    (1) lista_comandos -> lista_comandos . comando
-    (3) comando -> . declaracao_var_block
-    (4) comando -> . atribuicao
-    (5) comando -> . function_declaration
-    (6) comando -> . return_statement
-    (7) comando -> . type_declaration_block
-    (14) declaracao_var_block -> . VAR var_declaration_list
-    (27) atribuicao -> . Variavel ATRIB expressao SEMI
-    (28) function_declaration -> . DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body
-    (32) return_statement -> . RETURN expressao SEMI
-    (8) type_declaration_block -> . TYPE type_definition_list
-    (49) Variavel -> . ID
-    (50) Variavel -> . array_access
-    (51) Variavel -> . record_access
-    (53) array_access -> . ID LBRACKET expressao RBRACKET
-    (52) record_access -> . Variavel DOT ID
+    (0) S' -> programa .
 
-    VAR             shift and go to state 9
-    DEF             shift and go to state 11
-    RETURN          shift and go to state 13
-    TYPE            shift and go to state 14
-    ID              shift and go to state 12
 
-    comando                        shift and go to state 3
-    declaracao_var_block           shift and go to state 4
-    atribuicao                     shift and go to state 5
-    function_declaration           shift and go to state 6
-    return_statement               shift and go to state 7
-    type_declaration_block         shift and go to state 8
-    Variavel                       shift and go to state 10
-    array_access                   shift and go to state 15
-    record_access                  shift and go to state 16
 
 state 2
 
-    (2) lista_comandos -> empty .
+    (1) programa -> lista_declaracoes . corpo_principal
+    (2) lista_declaracoes -> lista_declaracoes . declaracao
+    (7) corpo_principal -> . BEGIN lista_comandos END SEMI
+    (4) declaracao -> . type_declaration_block
+    (5) declaracao -> . var_declaration_block
+    (6) declaracao -> . function_declaration
+    (13) type_declaration_block -> . TYPE type_definition_list
+    (24) var_declaration_block -> . VAR var_declaration_list
+    (38) function_declaration -> . DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body
 
-    VAR             reduce using rule 2 (lista_comandos -> empty .)
-    DEF             reduce using rule 2 (lista_comandos -> empty .)
-    RETURN          reduce using rule 2 (lista_comandos -> empty .)
-    TYPE            reduce using rule 2 (lista_comandos -> empty .)
-    ID              reduce using rule 2 (lista_comandos -> empty .)
-    $end            reduce using rule 2 (lista_comandos -> empty .)
-    END             reduce using rule 2 (lista_comandos -> empty .)
+    BEGIN           shift and go to state 6
+    TYPE            shift and go to state 10
+    VAR             shift and go to state 11
+    DEF             shift and go to state 12
 
+    corpo_principal                shift and go to state 4
+    declaracao                     shift and go to state 5
+    type_declaration_block         shift and go to state 7
+    var_declaration_block          shift and go to state 8
+    function_declaration           shift and go to state 9
 
 state 3
 
-    (1) lista_comandos -> lista_comandos comando .
+    (3) lista_declaracoes -> empty .
 
-    VAR             reduce using rule 1 (lista_comandos -> lista_comandos comando .)
-    DEF             reduce using rule 1 (lista_comandos -> lista_comandos comando .)
-    RETURN          reduce using rule 1 (lista_comandos -> lista_comandos comando .)
-    TYPE            reduce using rule 1 (lista_comandos -> lista_comandos comando .)
-    ID              reduce using rule 1 (lista_comandos -> lista_comandos comando .)
-    $end            reduce using rule 1 (lista_comandos -> lista_comandos comando .)
-    END             reduce using rule 1 (lista_comandos -> lista_comandos comando .)
+    BEGIN           reduce using rule 3 (lista_declaracoes -> empty .)
+    TYPE            reduce using rule 3 (lista_declaracoes -> empty .)
+    VAR             reduce using rule 3 (lista_declaracoes -> empty .)
+    DEF             reduce using rule 3 (lista_declaracoes -> empty .)
 
 
 state 4
 
-    (3) comando -> declaracao_var_block .
+    (1) programa -> lista_declaracoes corpo_principal .
 
-    VAR             reduce using rule 3 (comando -> declaracao_var_block .)
-    DEF             reduce using rule 3 (comando -> declaracao_var_block .)
-    RETURN          reduce using rule 3 (comando -> declaracao_var_block .)
-    TYPE            reduce using rule 3 (comando -> declaracao_var_block .)
-    ID              reduce using rule 3 (comando -> declaracao_var_block .)
-    $end            reduce using rule 3 (comando -> declaracao_var_block .)
-    END             reduce using rule 3 (comando -> declaracao_var_block .)
+    $end            reduce using rule 1 (programa -> lista_declaracoes corpo_principal .)
 
 
 state 5
 
-    (4) comando -> atribuicao .
+    (2) lista_declaracoes -> lista_declaracoes declaracao .
 
-    VAR             reduce using rule 4 (comando -> atribuicao .)
-    DEF             reduce using rule 4 (comando -> atribuicao .)
-    RETURN          reduce using rule 4 (comando -> atribuicao .)
-    TYPE            reduce using rule 4 (comando -> atribuicao .)
-    ID              reduce using rule 4 (comando -> atribuicao .)
-    $end            reduce using rule 4 (comando -> atribuicao .)
-    END             reduce using rule 4 (comando -> atribuicao .)
+    BEGIN           reduce using rule 2 (lista_declaracoes -> lista_declaracoes declaracao .)
+    TYPE            reduce using rule 2 (lista_declaracoes -> lista_declaracoes declaracao .)
+    VAR             reduce using rule 2 (lista_declaracoes -> lista_declaracoes declaracao .)
+    DEF             reduce using rule 2 (lista_declaracoes -> lista_declaracoes declaracao .)
 
 
 state 6
 
-    (5) comando -> function_declaration .
+    (7) corpo_principal -> BEGIN . lista_comandos END SEMI
+    (8) lista_comandos -> . lista_comandos comando
+    (9) lista_comandos -> . empty
+    (64) empty -> .
 
-    VAR             reduce using rule 5 (comando -> function_declaration .)
-    DEF             reduce using rule 5 (comando -> function_declaration .)
-    RETURN          reduce using rule 5 (comando -> function_declaration .)
-    TYPE            reduce using rule 5 (comando -> function_declaration .)
-    ID              reduce using rule 5 (comando -> function_declaration .)
-    $end            reduce using rule 5 (comando -> function_declaration .)
-    END             reduce using rule 5 (comando -> function_declaration .)
+    END             reduce using rule 64 (empty -> .)
+    RETURN          reduce using rule 64 (empty -> .)
+    ID              reduce using rule 64 (empty -> .)
 
+    lista_comandos                 shift and go to state 13
+    empty                          shift and go to state 14
 
 state 7
 
-    (6) comando -> return_statement .
+    (4) declaracao -> type_declaration_block .
 
-    VAR             reduce using rule 6 (comando -> return_statement .)
-    DEF             reduce using rule 6 (comando -> return_statement .)
-    RETURN          reduce using rule 6 (comando -> return_statement .)
-    TYPE            reduce using rule 6 (comando -> return_statement .)
-    ID              reduce using rule 6 (comando -> return_statement .)
-    $end            reduce using rule 6 (comando -> return_statement .)
-    END             reduce using rule 6 (comando -> return_statement .)
+    BEGIN           reduce using rule 4 (declaracao -> type_declaration_block .)
+    TYPE            reduce using rule 4 (declaracao -> type_declaration_block .)
+    VAR             reduce using rule 4 (declaracao -> type_declaration_block .)
+    DEF             reduce using rule 4 (declaracao -> type_declaration_block .)
 
 
 state 8
 
-    (7) comando -> type_declaration_block .
+    (5) declaracao -> var_declaration_block .
 
-    VAR             reduce using rule 7 (comando -> type_declaration_block .)
-    DEF             reduce using rule 7 (comando -> type_declaration_block .)
-    RETURN          reduce using rule 7 (comando -> type_declaration_block .)
-    TYPE            reduce using rule 7 (comando -> type_declaration_block .)
-    ID              reduce using rule 7 (comando -> type_declaration_block .)
-    $end            reduce using rule 7 (comando -> type_declaration_block .)
-    END             reduce using rule 7 (comando -> type_declaration_block .)
+    BEGIN           reduce using rule 5 (declaracao -> var_declaration_block .)
+    TYPE            reduce using rule 5 (declaracao -> var_declaration_block .)
+    VAR             reduce using rule 5 (declaracao -> var_declaration_block .)
+    DEF             reduce using rule 5 (declaracao -> var_declaration_block .)
 
 
 state 9
 
-    (14) declaracao_var_block -> VAR . var_declaration_list
-    (15) var_declaration_list -> . var_declaration_list declaracao_var
-    (16) var_declaration_list -> . declaracao_var
-    (17) declaracao_var -> . ID COLON tipo_specifier SEMI
+    (6) declaracao -> function_declaration .
 
-    ID              shift and go to state 19
+    BEGIN           reduce using rule 6 (declaracao -> function_declaration .)
+    TYPE            reduce using rule 6 (declaracao -> function_declaration .)
+    VAR             reduce using rule 6 (declaracao -> function_declaration .)
+    DEF             reduce using rule 6 (declaracao -> function_declaration .)
 
-    var_declaration_list           shift and go to state 17
-    declaracao_var                 shift and go to state 18
 
 state 10
 
-    (27) atribuicao -> Variavel . ATRIB expressao SEMI
-    (52) record_access -> Variavel . DOT ID
+    (13) type_declaration_block -> TYPE . type_definition_list
+    (14) type_definition_list -> . type_definition_list single_type_definition
+    (15) type_definition_list -> . single_type_definition
+    (16) single_type_definition -> . ID EQUAL_TO type_definition SEMI
 
-    ATRIB           shift and go to state 20
-    DOT             shift and go to state 21
+    ID              shift and go to state 17
 
+    type_definition_list           shift and go to state 15
+    single_type_definition         shift and go to state 16
 
 state 11
 
-    (28) function_declaration -> DEF . ID LPAREN params_opt RPAREN tipo_retorno_opt function_body
+    (24) var_declaration_block -> VAR . var_declaration_list
+    (25) var_declaration_list -> . var_declaration_list declaracao_var
+    (26) var_declaration_list -> . declaracao_var
+    (27) declaracao_var -> . ID COLON tipo_specifier SEMI
 
-    ID              shift and go to state 22
+    ID              shift and go to state 20
 
+    var_declaration_list           shift and go to state 18
+    declaracao_var                 shift and go to state 19
 
 state 12
 
-    (49) Variavel -> ID .
-    (53) array_access -> ID . LBRACKET expressao RBRACKET
+    (38) function_declaration -> DEF . ID LPAREN params_opt RPAREN tipo_retorno_opt function_body
 
-    ATRIB           reduce using rule 49 (Variavel -> ID .)
-    DOT             reduce using rule 49 (Variavel -> ID .)
-    LBRACKET        shift and go to state 23
+    ID              shift and go to state 21
 
 
 state 13
 
-    (32) return_statement -> RETURN . expressao SEMI
-    (40) expressao -> . expressao PLUS expressao
-    (41) expressao -> . expressao MINUS expressao
-    (42) expressao -> . expressao TIMES expressao
-    (43) expressao -> . expressao DIVIDE expressao
-    (44) expressao -> . termo
-    (45) termo -> . LPAREN expressao RPAREN
-    (46) termo -> . NUMERO
-    (47) termo -> . function_call
-    (48) termo -> . Variavel
-    (54) function_call -> . ID LPAREN args_opt RPAREN
-    (49) Variavel -> . ID
-    (50) Variavel -> . array_access
-    (51) Variavel -> . record_access
-    (53) array_access -> . ID LBRACKET expressao RBRACKET
-    (52) record_access -> . Variavel DOT ID
+    (7) corpo_principal -> BEGIN lista_comandos . END SEMI
+    (8) lista_comandos -> lista_comandos . comando
+    (10) comando -> . atribuicao
+    (11) comando -> . return_statement
+    (12) comando -> . function_call SEMI
+    (32) atribuicao -> . lvalue ATRIB expressao SEMI
+    (42) return_statement -> . RETURN expressao SEMI
+    (59) function_call -> . ID LPAREN args_opt RPAREN
+    (33) lvalue -> . ID
+    (34) lvalue -> . array_access
+    (35) lvalue -> . record_access
+    (36) array_access -> . ID LBRACKET expressao RBRACKET
+    (37) record_access -> . lvalue DOT ID
 
-    LPAREN          shift and go to state 26
-    NUMERO          shift and go to state 27
-    ID              shift and go to state 30
+    END             shift and go to state 22
+    RETURN          shift and go to state 28
+    ID              shift and go to state 29
 
-    expressao                      shift and go to state 24
-    termo                          shift and go to state 25
-    function_call                  shift and go to state 28
-    Variavel                       shift and go to state 29
-    array_access                   shift and go to state 15
-    record_access                  shift and go to state 16
+    comando                        shift and go to state 23
+    atribuicao                     shift and go to state 24
+    return_statement               shift and go to state 25
+    function_call                  shift and go to state 26
+    lvalue                         shift and go to state 27
+    array_access                   shift and go to state 30
+    record_access                  shift and go to state 31
 
 state 14
 
-    (8) type_declaration_block -> TYPE . type_definition_list
-    (9) type_definition_list -> . type_definition_list single_type_definition
-    (10) type_definition_list -> . single_type_definition
-    (11) single_type_definition -> . ID EQUAL_TO type_definition SEMI
+    (9) lista_comandos -> empty .
 
-    ID              shift and go to state 33
+    END             reduce using rule 9 (lista_comandos -> empty .)
+    RETURN          reduce using rule 9 (lista_comandos -> empty .)
+    ID              reduce using rule 9 (lista_comandos -> empty .)
 
-    type_definition_list           shift and go to state 31
-    single_type_definition         shift and go to state 32
 
 state 15
 
-    (50) Variavel -> array_access .
+    (13) type_declaration_block -> TYPE type_definition_list .
+    (14) type_definition_list -> type_definition_list . single_type_definition
+    (16) single_type_definition -> . ID EQUAL_TO type_definition SEMI
 
-    ATRIB           reduce using rule 50 (Variavel -> array_access .)
-    DOT             reduce using rule 50 (Variavel -> array_access .)
-    SEMI            reduce using rule 50 (Variavel -> array_access .)
-    PLUS            reduce using rule 50 (Variavel -> array_access .)
-    MINUS           reduce using rule 50 (Variavel -> array_access .)
-    TIMES           reduce using rule 50 (Variavel -> array_access .)
-    DIVIDE          reduce using rule 50 (Variavel -> array_access .)
-    RBRACKET        reduce using rule 50 (Variavel -> array_access .)
-    RPAREN          reduce using rule 50 (Variavel -> array_access .)
-    COMMA           reduce using rule 50 (Variavel -> array_access .)
+    BEGIN           reduce using rule 13 (type_declaration_block -> TYPE type_definition_list .)
+    TYPE            reduce using rule 13 (type_declaration_block -> TYPE type_definition_list .)
+    VAR             reduce using rule 13 (type_declaration_block -> TYPE type_definition_list .)
+    DEF             reduce using rule 13 (type_declaration_block -> TYPE type_definition_list .)
+    ID              shift and go to state 17
 
+    single_type_definition         shift and go to state 32
 
 state 16
 
-    (51) Variavel -> record_access .
+    (15) type_definition_list -> single_type_definition .
 
-    ATRIB           reduce using rule 51 (Variavel -> record_access .)
-    DOT             reduce using rule 51 (Variavel -> record_access .)
-    SEMI            reduce using rule 51 (Variavel -> record_access .)
-    PLUS            reduce using rule 51 (Variavel -> record_access .)
-    MINUS           reduce using rule 51 (Variavel -> record_access .)
-    TIMES           reduce using rule 51 (Variavel -> record_access .)
-    DIVIDE          reduce using rule 51 (Variavel -> record_access .)
-    RBRACKET        reduce using rule 51 (Variavel -> record_access .)
-    RPAREN          reduce using rule 51 (Variavel -> record_access .)
-    COMMA           reduce using rule 51 (Variavel -> record_access .)
+    ID              reduce using rule 15 (type_definition_list -> single_type_definition .)
+    BEGIN           reduce using rule 15 (type_definition_list -> single_type_definition .)
+    TYPE            reduce using rule 15 (type_definition_list -> single_type_definition .)
+    VAR             reduce using rule 15 (type_definition_list -> single_type_definition .)
+    DEF             reduce using rule 15 (type_definition_list -> single_type_definition .)
 
 
 state 17
 
-    (14) declaracao_var_block -> VAR var_declaration_list .
-    (15) var_declaration_list -> var_declaration_list . declaracao_var
-    (17) declaracao_var -> . ID COLON tipo_specifier SEMI
+    (16) single_type_definition -> ID . EQUAL_TO type_definition SEMI
 
-  ! shift/reduce conflict for ID resolved as shift
-    VAR             reduce using rule 14 (declaracao_var_block -> VAR var_declaration_list .)
-    DEF             reduce using rule 14 (declaracao_var_block -> VAR var_declaration_list .)
-    RETURN          reduce using rule 14 (declaracao_var_block -> VAR var_declaration_list .)
-    TYPE            reduce using rule 14 (declaracao_var_block -> VAR var_declaration_list .)
-    $end            reduce using rule 14 (declaracao_var_block -> VAR var_declaration_list .)
-    END             reduce using rule 14 (declaracao_var_block -> VAR var_declaration_list .)
-    ID              shift and go to state 19
+    EQUAL_TO        shift and go to state 33
 
-  ! ID              [ reduce using rule 14 (declaracao_var_block -> VAR var_declaration_list .) ]
-
-    declaracao_var                 shift and go to state 34
 
 state 18
 
-    (16) var_declaration_list -> declaracao_var .
+    (24) var_declaration_block -> VAR var_declaration_list .
+    (25) var_declaration_list -> var_declaration_list . declaracao_var
+    (27) declaracao_var -> . ID COLON tipo_specifier SEMI
 
-    ID              reduce using rule 16 (var_declaration_list -> declaracao_var .)
-    VAR             reduce using rule 16 (var_declaration_list -> declaracao_var .)
-    DEF             reduce using rule 16 (var_declaration_list -> declaracao_var .)
-    RETURN          reduce using rule 16 (var_declaration_list -> declaracao_var .)
-    TYPE            reduce using rule 16 (var_declaration_list -> declaracao_var .)
-    $end            reduce using rule 16 (var_declaration_list -> declaracao_var .)
-    END             reduce using rule 16 (var_declaration_list -> declaracao_var .)
-    BEGIN           reduce using rule 16 (var_declaration_list -> declaracao_var .)
+    BEGIN           reduce using rule 24 (var_declaration_block -> VAR var_declaration_list .)
+    TYPE            reduce using rule 24 (var_declaration_block -> VAR var_declaration_list .)
+    VAR             reduce using rule 24 (var_declaration_block -> VAR var_declaration_list .)
+    DEF             reduce using rule 24 (var_declaration_block -> VAR var_declaration_list .)
+    ID              shift and go to state 20
 
+    declaracao_var                 shift and go to state 34
 
 state 19
 
-    (17) declaracao_var -> ID . COLON tipo_specifier SEMI
+    (26) var_declaration_list -> declaracao_var .
 
-    COLON           shift and go to state 35
+    ID              reduce using rule 26 (var_declaration_list -> declaracao_var .)
+    BEGIN           reduce using rule 26 (var_declaration_list -> declaracao_var .)
+    TYPE            reduce using rule 26 (var_declaration_list -> declaracao_var .)
+    VAR             reduce using rule 26 (var_declaration_list -> declaracao_var .)
+    DEF             reduce using rule 26 (var_declaration_list -> declaracao_var .)
 
 
 state 20
 
-    (27) atribuicao -> Variavel ATRIB . expressao SEMI
-    (40) expressao -> . expressao PLUS expressao
-    (41) expressao -> . expressao MINUS expressao
-    (42) expressao -> . expressao TIMES expressao
-    (43) expressao -> . expressao DIVIDE expressao
-    (44) expressao -> . termo
-    (45) termo -> . LPAREN expressao RPAREN
-    (46) termo -> . NUMERO
-    (47) termo -> . function_call
-    (48) termo -> . Variavel
-    (54) function_call -> . ID LPAREN args_opt RPAREN
-    (49) Variavel -> . ID
-    (50) Variavel -> . array_access
-    (51) Variavel -> . record_access
-    (53) array_access -> . ID LBRACKET expressao RBRACKET
-    (52) record_access -> . Variavel DOT ID
+    (27) declaracao_var -> ID . COLON tipo_specifier SEMI
 
-    LPAREN          shift and go to state 26
-    NUMERO          shift and go to state 27
-    ID              shift and go to state 30
+    COLON           shift and go to state 35
 
-    Variavel                       shift and go to state 29
-    expressao                      shift and go to state 36
-    termo                          shift and go to state 25
-    function_call                  shift and go to state 28
-    array_access                   shift and go to state 15
-    record_access                  shift and go to state 16
 
 state 21
 
-    (52) record_access -> Variavel DOT . ID
+    (38) function_declaration -> DEF ID . LPAREN params_opt RPAREN tipo_retorno_opt function_body
 
-    ID              shift and go to state 37
+    LPAREN          shift and go to state 36
 
 
 state 22
 
-    (28) function_declaration -> DEF ID . LPAREN params_opt RPAREN tipo_retorno_opt function_body
+    (7) corpo_principal -> BEGIN lista_comandos END . SEMI
 
-    LPAREN          shift and go to state 38
+    SEMI            shift and go to state 37
 
 
 state 23
 
-    (53) array_access -> ID LBRACKET . expressao RBRACKET
-    (40) expressao -> . expressao PLUS expressao
-    (41) expressao -> . expressao MINUS expressao
-    (42) expressao -> . expressao TIMES expressao
-    (43) expressao -> . expressao DIVIDE expressao
-    (44) expressao -> . termo
-    (45) termo -> . LPAREN expressao RPAREN
-    (46) termo -> . NUMERO
-    (47) termo -> . function_call
-    (48) termo -> . Variavel
-    (54) function_call -> . ID LPAREN args_opt RPAREN
-    (49) Variavel -> . ID
-    (50) Variavel -> . array_access
-    (51) Variavel -> . record_access
-    (53) array_access -> . ID LBRACKET expressao RBRACKET
-    (52) record_access -> . Variavel DOT ID
+    (8) lista_comandos -> lista_comandos comando .
 
-    LPAREN          shift and go to state 26
-    NUMERO          shift and go to state 27
-    ID              shift and go to state 30
+    END             reduce using rule 8 (lista_comandos -> lista_comandos comando .)
+    RETURN          reduce using rule 8 (lista_comandos -> lista_comandos comando .)
+    ID              reduce using rule 8 (lista_comandos -> lista_comandos comando .)
 
-    expressao                      shift and go to state 39
-    termo                          shift and go to state 25
-    function_call                  shift and go to state 28
-    Variavel                       shift and go to state 29
-    array_access                   shift and go to state 15
-    record_access                  shift and go to state 16
 
 state 24
 
-    (32) return_statement -> RETURN expressao . SEMI
-    (40) expressao -> expressao . PLUS expressao
-    (41) expressao -> expressao . MINUS expressao
-    (42) expressao -> expressao . TIMES expressao
-    (43) expressao -> expressao . DIVIDE expressao
+    (10) comando -> atribuicao .
 
-    SEMI            shift and go to state 40
-    PLUS            shift and go to state 41
-    MINUS           shift and go to state 42
-    TIMES           shift and go to state 43
-    DIVIDE          shift and go to state 44
+    END             reduce using rule 10 (comando -> atribuicao .)
+    RETURN          reduce using rule 10 (comando -> atribuicao .)
+    ID              reduce using rule 10 (comando -> atribuicao .)
 
 
 state 25
 
-    (44) expressao -> termo .
+    (11) comando -> return_statement .
 
-    SEMI            reduce using rule 44 (expressao -> termo .)
-    PLUS            reduce using rule 44 (expressao -> termo .)
-    MINUS           reduce using rule 44 (expressao -> termo .)
-    TIMES           reduce using rule 44 (expressao -> termo .)
-    DIVIDE          reduce using rule 44 (expressao -> termo .)
-    RBRACKET        reduce using rule 44 (expressao -> termo .)
-    RPAREN          reduce using rule 44 (expressao -> termo .)
-    COMMA           reduce using rule 44 (expressao -> termo .)
+    END             reduce using rule 11 (comando -> return_statement .)
+    RETURN          reduce using rule 11 (comando -> return_statement .)
+    ID              reduce using rule 11 (comando -> return_statement .)
 
 
 state 26
 
-    (45) termo -> LPAREN . expressao RPAREN
-    (40) expressao -> . expressao PLUS expressao
-    (41) expressao -> . expressao MINUS expressao
-    (42) expressao -> . expressao TIMES expressao
-    (43) expressao -> . expressao DIVIDE expressao
-    (44) expressao -> . termo
-    (45) termo -> . LPAREN expressao RPAREN
-    (46) termo -> . NUMERO
-    (47) termo -> . function_call
-    (48) termo -> . Variavel
-    (54) function_call -> . ID LPAREN args_opt RPAREN
-    (49) Variavel -> . ID
-    (50) Variavel -> . array_access
-    (51) Variavel -> . record_access
-    (53) array_access -> . ID LBRACKET expressao RBRACKET
-    (52) record_access -> . Variavel DOT ID
+    (12) comando -> function_call . SEMI
 
-    LPAREN          shift and go to state 26
-    NUMERO          shift and go to state 27
-    ID              shift and go to state 30
+    SEMI            shift and go to state 38
 
-    expressao                      shift and go to state 45
-    termo                          shift and go to state 25
-    function_call                  shift and go to state 28
-    Variavel                       shift and go to state 29
-    array_access                   shift and go to state 15
-    record_access                  shift and go to state 16
 
 state 27
 
-    (46) termo -> NUMERO .
+    (32) atribuicao -> lvalue . ATRIB expressao SEMI
+    (37) record_access -> lvalue . DOT ID
 
-    SEMI            reduce using rule 46 (termo -> NUMERO .)
-    PLUS            reduce using rule 46 (termo -> NUMERO .)
-    MINUS           reduce using rule 46 (termo -> NUMERO .)
-    TIMES           reduce using rule 46 (termo -> NUMERO .)
-    DIVIDE          reduce using rule 46 (termo -> NUMERO .)
-    RBRACKET        reduce using rule 46 (termo -> NUMERO .)
-    RPAREN          reduce using rule 46 (termo -> NUMERO .)
-    COMMA           reduce using rule 46 (termo -> NUMERO .)
+    ATRIB           shift and go to state 39
+    DOT             shift and go to state 40
 
 
 state 28
 
-    (47) termo -> function_call .
+    (42) return_statement -> RETURN . expressao SEMI
+    (50) expressao -> . expressao PLUS expressao
+    (51) expressao -> . expressao MINUS expressao
+    (52) expressao -> . expressao TIMES expressao
+    (53) expressao -> . expressao DIVIDE expressao
+    (54) expressao -> . termo
+    (55) termo -> . LPAREN expressao RPAREN
+    (56) termo -> . NUMERO
+    (57) termo -> . function_call
+    (58) termo -> . lvalue
+    (59) function_call -> . ID LPAREN args_opt RPAREN
+    (33) lvalue -> . ID
+    (34) lvalue -> . array_access
+    (35) lvalue -> . record_access
+    (36) array_access -> . ID LBRACKET expressao RBRACKET
+    (37) record_access -> . lvalue DOT ID
 
-    SEMI            reduce using rule 47 (termo -> function_call .)
-    PLUS            reduce using rule 47 (termo -> function_call .)
-    MINUS           reduce using rule 47 (termo -> function_call .)
-    TIMES           reduce using rule 47 (termo -> function_call .)
-    DIVIDE          reduce using rule 47 (termo -> function_call .)
-    RBRACKET        reduce using rule 47 (termo -> function_call .)
-    RPAREN          reduce using rule 47 (termo -> function_call .)
-    COMMA           reduce using rule 47 (termo -> function_call .)
+    LPAREN          shift and go to state 43
+    NUMERO          shift and go to state 44
+    ID              shift and go to state 29
 
+    expressao                      shift and go to state 41
+    termo                          shift and go to state 42
+    function_call                  shift and go to state 45
+    lvalue                         shift and go to state 46
+    array_access                   shift and go to state 30
+    record_access                  shift and go to state 31
 
 state 29
 
-    (48) termo -> Variavel .
-    (52) record_access -> Variavel . DOT ID
+    (59) function_call -> ID . LPAREN args_opt RPAREN
+    (33) lvalue -> ID .
+    (36) array_access -> ID . LBRACKET expressao RBRACKET
 
-    SEMI            reduce using rule 48 (termo -> Variavel .)
-    PLUS            reduce using rule 48 (termo -> Variavel .)
-    MINUS           reduce using rule 48 (termo -> Variavel .)
-    TIMES           reduce using rule 48 (termo -> Variavel .)
-    DIVIDE          reduce using rule 48 (termo -> Variavel .)
-    RBRACKET        reduce using rule 48 (termo -> Variavel .)
-    RPAREN          reduce using rule 48 (termo -> Variavel .)
-    COMMA           reduce using rule 48 (termo -> Variavel .)
-    DOT             shift and go to state 21
+    LPAREN          shift and go to state 47
+    ATRIB           reduce using rule 33 (lvalue -> ID .)
+    DOT             reduce using rule 33 (lvalue -> ID .)
+    SEMI            reduce using rule 33 (lvalue -> ID .)
+    PLUS            reduce using rule 33 (lvalue -> ID .)
+    MINUS           reduce using rule 33 (lvalue -> ID .)
+    TIMES           reduce using rule 33 (lvalue -> ID .)
+    DIVIDE          reduce using rule 33 (lvalue -> ID .)
+    RPAREN          reduce using rule 33 (lvalue -> ID .)
+    COMMA           reduce using rule 33 (lvalue -> ID .)
+    RBRACKET        reduce using rule 33 (lvalue -> ID .)
+    LBRACKET        shift and go to state 48
 
 
 state 30
 
-    (54) function_call -> ID . LPAREN args_opt RPAREN
-    (49) Variavel -> ID .
-    (53) array_access -> ID . LBRACKET expressao RBRACKET
+    (34) lvalue -> array_access .
 
-    LPAREN          shift and go to state 46
-    DOT             reduce using rule 49 (Variavel -> ID .)
-    SEMI            reduce using rule 49 (Variavel -> ID .)
-    PLUS            reduce using rule 49 (Variavel -> ID .)
-    MINUS           reduce using rule 49 (Variavel -> ID .)
-    TIMES           reduce using rule 49 (Variavel -> ID .)
-    DIVIDE          reduce using rule 49 (Variavel -> ID .)
-    RBRACKET        reduce using rule 49 (Variavel -> ID .)
-    RPAREN          reduce using rule 49 (Variavel -> ID .)
-    COMMA           reduce using rule 49 (Variavel -> ID .)
-    LBRACKET        shift and go to state 23
+    ATRIB           reduce using rule 34 (lvalue -> array_access .)
+    DOT             reduce using rule 34 (lvalue -> array_access .)
+    SEMI            reduce using rule 34 (lvalue -> array_access .)
+    PLUS            reduce using rule 34 (lvalue -> array_access .)
+    MINUS           reduce using rule 34 (lvalue -> array_access .)
+    TIMES           reduce using rule 34 (lvalue -> array_access .)
+    DIVIDE          reduce using rule 34 (lvalue -> array_access .)
+    RPAREN          reduce using rule 34 (lvalue -> array_access .)
+    COMMA           reduce using rule 34 (lvalue -> array_access .)
+    RBRACKET        reduce using rule 34 (lvalue -> array_access .)
 
 
 state 31
 
-    (8) type_declaration_block -> TYPE type_definition_list .
-    (9) type_definition_list -> type_definition_list . single_type_definition
-    (11) single_type_definition -> . ID EQUAL_TO type_definition SEMI
+    (35) lvalue -> record_access .
 
-  ! shift/reduce conflict for ID resolved as shift
-    VAR             reduce using rule 8 (type_declaration_block -> TYPE type_definition_list .)
-    DEF             reduce using rule 8 (type_declaration_block -> TYPE type_definition_list .)
-    RETURN          reduce using rule 8 (type_declaration_block -> TYPE type_definition_list .)
-    TYPE            reduce using rule 8 (type_declaration_block -> TYPE type_definition_list .)
-    $end            reduce using rule 8 (type_declaration_block -> TYPE type_definition_list .)
-    END             reduce using rule 8 (type_declaration_block -> TYPE type_definition_list .)
-    ID              shift and go to state 33
+    ATRIB           reduce using rule 35 (lvalue -> record_access .)
+    DOT             reduce using rule 35 (lvalue -> record_access .)
+    SEMI            reduce using rule 35 (lvalue -> record_access .)
+    PLUS            reduce using rule 35 (lvalue -> record_access .)
+    MINUS           reduce using rule 35 (lvalue -> record_access .)
+    TIMES           reduce using rule 35 (lvalue -> record_access .)
+    DIVIDE          reduce using rule 35 (lvalue -> record_access .)
+    RPAREN          reduce using rule 35 (lvalue -> record_access .)
+    COMMA           reduce using rule 35 (lvalue -> record_access .)
+    RBRACKET        reduce using rule 35 (lvalue -> record_access .)
 
-  ! ID              [ reduce using rule 8 (type_declaration_block -> TYPE type_definition_list .) ]
-
-    single_type_definition         shift and go to state 47
 
 state 32
 
-    (10) type_definition_list -> single_type_definition .
+    (14) type_definition_list -> type_definition_list single_type_definition .
 
-    ID              reduce using rule 10 (type_definition_list -> single_type_definition .)
-    VAR             reduce using rule 10 (type_definition_list -> single_type_definition .)
-    DEF             reduce using rule 10 (type_definition_list -> single_type_definition .)
-    RETURN          reduce using rule 10 (type_definition_list -> single_type_definition .)
-    TYPE            reduce using rule 10 (type_definition_list -> single_type_definition .)
-    $end            reduce using rule 10 (type_definition_list -> single_type_definition .)
-    END             reduce using rule 10 (type_definition_list -> single_type_definition .)
+    ID              reduce using rule 14 (type_definition_list -> type_definition_list single_type_definition .)
+    BEGIN           reduce using rule 14 (type_definition_list -> type_definition_list single_type_definition .)
+    TYPE            reduce using rule 14 (type_definition_list -> type_definition_list single_type_definition .)
+    VAR             reduce using rule 14 (type_definition_list -> type_definition_list single_type_definition .)
+    DEF             reduce using rule 14 (type_definition_list -> type_definition_list single_type_definition .)
 
 
 state 33
 
-    (11) single_type_definition -> ID . EQUAL_TO type_definition SEMI
+    (16) single_type_definition -> ID EQUAL_TO . type_definition SEMI
+    (17) type_definition -> . array_type_definition
+    (18) type_definition -> . record_type_definition
+    (19) array_type_definition -> . ARRAY LBRACKET NUMERO RBRACKET OF tipo_specifier
+    (20) record_type_definition -> . RECORD field_list END
 
-    EQUAL_TO        shift and go to state 48
+    ARRAY           shift and go to state 52
+    RECORD          shift and go to state 53
 
+    type_definition                shift and go to state 49
+    array_type_definition          shift and go to state 50
+    record_type_definition         shift and go to state 51
 
 state 34
 
-    (15) var_declaration_list -> var_declaration_list declaracao_var .
+    (25) var_declaration_list -> var_declaration_list declaracao_var .
 
-    ID              reduce using rule 15 (var_declaration_list -> var_declaration_list declaracao_var .)
-    VAR             reduce using rule 15 (var_declaration_list -> var_declaration_list declaracao_var .)
-    DEF             reduce using rule 15 (var_declaration_list -> var_declaration_list declaracao_var .)
-    RETURN          reduce using rule 15 (var_declaration_list -> var_declaration_list declaracao_var .)
-    TYPE            reduce using rule 15 (var_declaration_list -> var_declaration_list declaracao_var .)
-    $end            reduce using rule 15 (var_declaration_list -> var_declaration_list declaracao_var .)
-    END             reduce using rule 15 (var_declaration_list -> var_declaration_list declaracao_var .)
-    BEGIN           reduce using rule 15 (var_declaration_list -> var_declaration_list declaracao_var .)
+    ID              reduce using rule 25 (var_declaration_list -> var_declaration_list declaracao_var .)
+    BEGIN           reduce using rule 25 (var_declaration_list -> var_declaration_list declaracao_var .)
+    TYPE            reduce using rule 25 (var_declaration_list -> var_declaration_list declaracao_var .)
+    VAR             reduce using rule 25 (var_declaration_list -> var_declaration_list declaracao_var .)
+    DEF             reduce using rule 25 (var_declaration_list -> var_declaration_list declaracao_var .)
 
 
 state 35
 
-    (17) declaracao_var -> ID COLON . tipo_specifier SEMI
-    (23) tipo_specifier -> . INTEGER
-    (24) tipo_specifier -> . REAL
-    (25) tipo_specifier -> . STRING
-    (26) tipo_specifier -> . ID
+    (27) declaracao_var -> ID COLON . tipo_specifier SEMI
+    (28) tipo_specifier -> . INTEGER
+    (29) tipo_specifier -> . REAL
+    (30) tipo_specifier -> . STRING
+    (31) tipo_specifier -> . ID
 
-    INTEGER         shift and go to state 51
-    REAL            shift and go to state 52
-    STRING          shift and go to state 53
-    ID              shift and go to state 49
+    INTEGER         shift and go to state 56
+    REAL            shift and go to state 57
+    STRING          shift and go to state 58
+    ID              shift and go to state 54
 
-    tipo_specifier                 shift and go to state 50
+    tipo_specifier                 shift and go to state 55
 
 state 36
 
-    (27) atribuicao -> Variavel ATRIB expressao . SEMI
-    (40) expressao -> expressao . PLUS expressao
-    (41) expressao -> expressao . MINUS expressao
-    (42) expressao -> expressao . TIMES expressao
-    (43) expressao -> expressao . DIVIDE expressao
+    (38) function_declaration -> DEF ID LPAREN . params_opt RPAREN tipo_retorno_opt function_body
+    (43) params_opt -> . params
+    (44) params_opt -> . empty
+    (45) params -> . params COMMA param
+    (46) params -> . param
+    (64) empty -> .
+    (47) param -> . ID COLON tipo_specifier
 
-    SEMI            shift and go to state 54
-    PLUS            shift and go to state 41
-    MINUS           shift and go to state 42
-    TIMES           shift and go to state 43
-    DIVIDE          shift and go to state 44
+    RPAREN          reduce using rule 64 (empty -> .)
+    ID              shift and go to state 59
 
+    params_opt                     shift and go to state 60
+    params                         shift and go to state 61
+    empty                          shift and go to state 62
+    param                          shift and go to state 63
 
 state 37
 
-    (52) record_access -> Variavel DOT ID .
+    (7) corpo_principal -> BEGIN lista_comandos END SEMI .
 
-    ATRIB           reduce using rule 52 (record_access -> Variavel DOT ID .)
-    DOT             reduce using rule 52 (record_access -> Variavel DOT ID .)
-    SEMI            reduce using rule 52 (record_access -> Variavel DOT ID .)
-    PLUS            reduce using rule 52 (record_access -> Variavel DOT ID .)
-    MINUS           reduce using rule 52 (record_access -> Variavel DOT ID .)
-    TIMES           reduce using rule 52 (record_access -> Variavel DOT ID .)
-    DIVIDE          reduce using rule 52 (record_access -> Variavel DOT ID .)
-    RBRACKET        reduce using rule 52 (record_access -> Variavel DOT ID .)
-    RPAREN          reduce using rule 52 (record_access -> Variavel DOT ID .)
-    COMMA           reduce using rule 52 (record_access -> Variavel DOT ID .)
+    $end            reduce using rule 7 (corpo_principal -> BEGIN lista_comandos END SEMI .)
 
 
 state 38
 
-    (28) function_declaration -> DEF ID LPAREN . params_opt RPAREN tipo_retorno_opt function_body
-    (33) params_opt -> . params
-    (34) params_opt -> . empty
-    (35) params -> . params COMMA param
-    (36) params -> . param
-    (59) empty -> .
-    (37) param -> . ID COLON tipo_specifier
+    (12) comando -> function_call SEMI .
 
-    RPAREN          reduce using rule 59 (empty -> .)
-    ID              shift and go to state 55
+    END             reduce using rule 12 (comando -> function_call SEMI .)
+    RETURN          reduce using rule 12 (comando -> function_call SEMI .)
+    ID              reduce using rule 12 (comando -> function_call SEMI .)
 
-    params_opt                     shift and go to state 56
-    params                         shift and go to state 57
-    empty                          shift and go to state 58
-    param                          shift and go to state 59
 
 state 39
 
-    (53) array_access -> ID LBRACKET expressao . RBRACKET
-    (40) expressao -> expressao . PLUS expressao
-    (41) expressao -> expressao . MINUS expressao
-    (42) expressao -> expressao . TIMES expressao
-    (43) expressao -> expressao . DIVIDE expressao
+    (32) atribuicao -> lvalue ATRIB . expressao SEMI
+    (50) expressao -> . expressao PLUS expressao
+    (51) expressao -> . expressao MINUS expressao
+    (52) expressao -> . expressao TIMES expressao
+    (53) expressao -> . expressao DIVIDE expressao
+    (54) expressao -> . termo
+    (55) termo -> . LPAREN expressao RPAREN
+    (56) termo -> . NUMERO
+    (57) termo -> . function_call
+    (58) termo -> . lvalue
+    (59) function_call -> . ID LPAREN args_opt RPAREN
+    (33) lvalue -> . ID
+    (34) lvalue -> . array_access
+    (35) lvalue -> . record_access
+    (36) array_access -> . ID LBRACKET expressao RBRACKET
+    (37) record_access -> . lvalue DOT ID
 
-    RBRACKET        shift and go to state 60
-    PLUS            shift and go to state 41
-    MINUS           shift and go to state 42
-    TIMES           shift and go to state 43
-    DIVIDE          shift and go to state 44
+    LPAREN          shift and go to state 43
+    NUMERO          shift and go to state 44
+    ID              shift and go to state 29
 
+    lvalue                         shift and go to state 46
+    expressao                      shift and go to state 64
+    termo                          shift and go to state 42
+    function_call                  shift and go to state 45
+    array_access                   shift and go to state 30
+    record_access                  shift and go to state 31
 
 state 40
 
-    (32) return_statement -> RETURN expressao SEMI .
+    (37) record_access -> lvalue DOT . ID
 
-    VAR             reduce using rule 32 (return_statement -> RETURN expressao SEMI .)
-    DEF             reduce using rule 32 (return_statement -> RETURN expressao SEMI .)
-    RETURN          reduce using rule 32 (return_statement -> RETURN expressao SEMI .)
-    TYPE            reduce using rule 32 (return_statement -> RETURN expressao SEMI .)
-    ID              reduce using rule 32 (return_statement -> RETURN expressao SEMI .)
-    $end            reduce using rule 32 (return_statement -> RETURN expressao SEMI .)
-    END             reduce using rule 32 (return_statement -> RETURN expressao SEMI .)
+    ID              shift and go to state 65
 
 
 state 41
 
-    (40) expressao -> expressao PLUS . expressao
-    (40) expressao -> . expressao PLUS expressao
-    (41) expressao -> . expressao MINUS expressao
-    (42) expressao -> . expressao TIMES expressao
-    (43) expressao -> . expressao DIVIDE expressao
-    (44) expressao -> . termo
-    (45) termo -> . LPAREN expressao RPAREN
-    (46) termo -> . NUMERO
-    (47) termo -> . function_call
-    (48) termo -> . Variavel
-    (54) function_call -> . ID LPAREN args_opt RPAREN
-    (49) Variavel -> . ID
-    (50) Variavel -> . array_access
-    (51) Variavel -> . record_access
-    (53) array_access -> . ID LBRACKET expressao RBRACKET
-    (52) record_access -> . Variavel DOT ID
+    (42) return_statement -> RETURN expressao . SEMI
+    (50) expressao -> expressao . PLUS expressao
+    (51) expressao -> expressao . MINUS expressao
+    (52) expressao -> expressao . TIMES expressao
+    (53) expressao -> expressao . DIVIDE expressao
 
-    LPAREN          shift and go to state 26
-    NUMERO          shift and go to state 27
-    ID              shift and go to state 30
+    SEMI            shift and go to state 66
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    TIMES           shift and go to state 69
+    DIVIDE          shift and go to state 70
 
-    expressao                      shift and go to state 61
-    termo                          shift and go to state 25
-    function_call                  shift and go to state 28
-    Variavel                       shift and go to state 29
-    array_access                   shift and go to state 15
-    record_access                  shift and go to state 16
 
 state 42
 
-    (41) expressao -> expressao MINUS . expressao
-    (40) expressao -> . expressao PLUS expressao
-    (41) expressao -> . expressao MINUS expressao
-    (42) expressao -> . expressao TIMES expressao
-    (43) expressao -> . expressao DIVIDE expressao
-    (44) expressao -> . termo
-    (45) termo -> . LPAREN expressao RPAREN
-    (46) termo -> . NUMERO
-    (47) termo -> . function_call
-    (48) termo -> . Variavel
-    (54) function_call -> . ID LPAREN args_opt RPAREN
-    (49) Variavel -> . ID
-    (50) Variavel -> . array_access
-    (51) Variavel -> . record_access
-    (53) array_access -> . ID LBRACKET expressao RBRACKET
-    (52) record_access -> . Variavel DOT ID
+    (54) expressao -> termo .
 
-    LPAREN          shift and go to state 26
-    NUMERO          shift and go to state 27
-    ID              shift and go to state 30
+    SEMI            reduce using rule 54 (expressao -> termo .)
+    PLUS            reduce using rule 54 (expressao -> termo .)
+    MINUS           reduce using rule 54 (expressao -> termo .)
+    TIMES           reduce using rule 54 (expressao -> termo .)
+    DIVIDE          reduce using rule 54 (expressao -> termo .)
+    RPAREN          reduce using rule 54 (expressao -> termo .)
+    COMMA           reduce using rule 54 (expressao -> termo .)
+    RBRACKET        reduce using rule 54 (expressao -> termo .)
 
-    expressao                      shift and go to state 62
-    termo                          shift and go to state 25
-    function_call                  shift and go to state 28
-    Variavel                       shift and go to state 29
-    array_access                   shift and go to state 15
-    record_access                  shift and go to state 16
 
 state 43
 
-    (42) expressao -> expressao TIMES . expressao
-    (40) expressao -> . expressao PLUS expressao
-    (41) expressao -> . expressao MINUS expressao
-    (42) expressao -> . expressao TIMES expressao
-    (43) expressao -> . expressao DIVIDE expressao
-    (44) expressao -> . termo
-    (45) termo -> . LPAREN expressao RPAREN
-    (46) termo -> . NUMERO
-    (47) termo -> . function_call
-    (48) termo -> . Variavel
-    (54) function_call -> . ID LPAREN args_opt RPAREN
-    (49) Variavel -> . ID
-    (50) Variavel -> . array_access
-    (51) Variavel -> . record_access
-    (53) array_access -> . ID LBRACKET expressao RBRACKET
-    (52) record_access -> . Variavel DOT ID
+    (55) termo -> LPAREN . expressao RPAREN
+    (50) expressao -> . expressao PLUS expressao
+    (51) expressao -> . expressao MINUS expressao
+    (52) expressao -> . expressao TIMES expressao
+    (53) expressao -> . expressao DIVIDE expressao
+    (54) expressao -> . termo
+    (55) termo -> . LPAREN expressao RPAREN
+    (56) termo -> . NUMERO
+    (57) termo -> . function_call
+    (58) termo -> . lvalue
+    (59) function_call -> . ID LPAREN args_opt RPAREN
+    (33) lvalue -> . ID
+    (34) lvalue -> . array_access
+    (35) lvalue -> . record_access
+    (36) array_access -> . ID LBRACKET expressao RBRACKET
+    (37) record_access -> . lvalue DOT ID
 
-    LPAREN          shift and go to state 26
-    NUMERO          shift and go to state 27
-    ID              shift and go to state 30
+    LPAREN          shift and go to state 43
+    NUMERO          shift and go to state 44
+    ID              shift and go to state 29
 
-    expressao                      shift and go to state 63
-    termo                          shift and go to state 25
-    function_call                  shift and go to state 28
-    Variavel                       shift and go to state 29
-    array_access                   shift and go to state 15
-    record_access                  shift and go to state 16
+    expressao                      shift and go to state 71
+    termo                          shift and go to state 42
+    function_call                  shift and go to state 45
+    lvalue                         shift and go to state 46
+    array_access                   shift and go to state 30
+    record_access                  shift and go to state 31
 
 state 44
 
-    (43) expressao -> expressao DIVIDE . expressao
-    (40) expressao -> . expressao PLUS expressao
-    (41) expressao -> . expressao MINUS expressao
-    (42) expressao -> . expressao TIMES expressao
-    (43) expressao -> . expressao DIVIDE expressao
-    (44) expressao -> . termo
-    (45) termo -> . LPAREN expressao RPAREN
-    (46) termo -> . NUMERO
-    (47) termo -> . function_call
-    (48) termo -> . Variavel
-    (54) function_call -> . ID LPAREN args_opt RPAREN
-    (49) Variavel -> . ID
-    (50) Variavel -> . array_access
-    (51) Variavel -> . record_access
-    (53) array_access -> . ID LBRACKET expressao RBRACKET
-    (52) record_access -> . Variavel DOT ID
+    (56) termo -> NUMERO .
 
-    LPAREN          shift and go to state 26
-    NUMERO          shift and go to state 27
-    ID              shift and go to state 30
+    SEMI            reduce using rule 56 (termo -> NUMERO .)
+    PLUS            reduce using rule 56 (termo -> NUMERO .)
+    MINUS           reduce using rule 56 (termo -> NUMERO .)
+    TIMES           reduce using rule 56 (termo -> NUMERO .)
+    DIVIDE          reduce using rule 56 (termo -> NUMERO .)
+    RPAREN          reduce using rule 56 (termo -> NUMERO .)
+    COMMA           reduce using rule 56 (termo -> NUMERO .)
+    RBRACKET        reduce using rule 56 (termo -> NUMERO .)
 
-    expressao                      shift and go to state 64
-    termo                          shift and go to state 25
-    function_call                  shift and go to state 28
-    Variavel                       shift and go to state 29
-    array_access                   shift and go to state 15
-    record_access                  shift and go to state 16
 
 state 45
 
-    (45) termo -> LPAREN expressao . RPAREN
-    (40) expressao -> expressao . PLUS expressao
-    (41) expressao -> expressao . MINUS expressao
-    (42) expressao -> expressao . TIMES expressao
-    (43) expressao -> expressao . DIVIDE expressao
+    (57) termo -> function_call .
 
-    RPAREN          shift and go to state 65
-    PLUS            shift and go to state 41
-    MINUS           shift and go to state 42
-    TIMES           shift and go to state 43
-    DIVIDE          shift and go to state 44
+    SEMI            reduce using rule 57 (termo -> function_call .)
+    PLUS            reduce using rule 57 (termo -> function_call .)
+    MINUS           reduce using rule 57 (termo -> function_call .)
+    TIMES           reduce using rule 57 (termo -> function_call .)
+    DIVIDE          reduce using rule 57 (termo -> function_call .)
+    RPAREN          reduce using rule 57 (termo -> function_call .)
+    COMMA           reduce using rule 57 (termo -> function_call .)
+    RBRACKET        reduce using rule 57 (termo -> function_call .)
 
 
 state 46
 
-    (54) function_call -> ID LPAREN . args_opt RPAREN
-    (55) args_opt -> . args
-    (56) args_opt -> . empty
-    (57) args -> . args COMMA expressao
-    (58) args -> . expressao
-    (59) empty -> .
-    (40) expressao -> . expressao PLUS expressao
-    (41) expressao -> . expressao MINUS expressao
-    (42) expressao -> . expressao TIMES expressao
-    (43) expressao -> . expressao DIVIDE expressao
-    (44) expressao -> . termo
-    (45) termo -> . LPAREN expressao RPAREN
-    (46) termo -> . NUMERO
-    (47) termo -> . function_call
-    (48) termo -> . Variavel
-    (54) function_call -> . ID LPAREN args_opt RPAREN
-    (49) Variavel -> . ID
-    (50) Variavel -> . array_access
-    (51) Variavel -> . record_access
-    (53) array_access -> . ID LBRACKET expressao RBRACKET
-    (52) record_access -> . Variavel DOT ID
+    (58) termo -> lvalue .
+    (37) record_access -> lvalue . DOT ID
 
-    RPAREN          reduce using rule 59 (empty -> .)
-    LPAREN          shift and go to state 26
-    NUMERO          shift and go to state 27
-    ID              shift and go to state 30
+    SEMI            reduce using rule 58 (termo -> lvalue .)
+    PLUS            reduce using rule 58 (termo -> lvalue .)
+    MINUS           reduce using rule 58 (termo -> lvalue .)
+    TIMES           reduce using rule 58 (termo -> lvalue .)
+    DIVIDE          reduce using rule 58 (termo -> lvalue .)
+    RPAREN          reduce using rule 58 (termo -> lvalue .)
+    COMMA           reduce using rule 58 (termo -> lvalue .)
+    RBRACKET        reduce using rule 58 (termo -> lvalue .)
+    DOT             shift and go to state 40
 
-    args_opt                       shift and go to state 66
-    args                           shift and go to state 67
-    empty                          shift and go to state 68
-    expressao                      shift and go to state 69
-    termo                          shift and go to state 25
-    function_call                  shift and go to state 28
-    Variavel                       shift and go to state 29
-    array_access                   shift and go to state 15
-    record_access                  shift and go to state 16
 
 state 47
 
-    (9) type_definition_list -> type_definition_list single_type_definition .
+    (59) function_call -> ID LPAREN . args_opt RPAREN
+    (60) args_opt -> . args
+    (61) args_opt -> . empty
+    (62) args -> . args COMMA expressao
+    (63) args -> . expressao
+    (64) empty -> .
+    (50) expressao -> . expressao PLUS expressao
+    (51) expressao -> . expressao MINUS expressao
+    (52) expressao -> . expressao TIMES expressao
+    (53) expressao -> . expressao DIVIDE expressao
+    (54) expressao -> . termo
+    (55) termo -> . LPAREN expressao RPAREN
+    (56) termo -> . NUMERO
+    (57) termo -> . function_call
+    (58) termo -> . lvalue
+    (59) function_call -> . ID LPAREN args_opt RPAREN
+    (33) lvalue -> . ID
+    (34) lvalue -> . array_access
+    (35) lvalue -> . record_access
+    (36) array_access -> . ID LBRACKET expressao RBRACKET
+    (37) record_access -> . lvalue DOT ID
 
-    ID              reduce using rule 9 (type_definition_list -> type_definition_list single_type_definition .)
-    VAR             reduce using rule 9 (type_definition_list -> type_definition_list single_type_definition .)
-    DEF             reduce using rule 9 (type_definition_list -> type_definition_list single_type_definition .)
-    RETURN          reduce using rule 9 (type_definition_list -> type_definition_list single_type_definition .)
-    TYPE            reduce using rule 9 (type_definition_list -> type_definition_list single_type_definition .)
-    $end            reduce using rule 9 (type_definition_list -> type_definition_list single_type_definition .)
-    END             reduce using rule 9 (type_definition_list -> type_definition_list single_type_definition .)
+    RPAREN          reduce using rule 64 (empty -> .)
+    LPAREN          shift and go to state 43
+    NUMERO          shift and go to state 44
+    ID              shift and go to state 29
 
+    args_opt                       shift and go to state 72
+    args                           shift and go to state 73
+    empty                          shift and go to state 74
+    expressao                      shift and go to state 75
+    termo                          shift and go to state 42
+    function_call                  shift and go to state 45
+    lvalue                         shift and go to state 46
+    array_access                   shift and go to state 30
+    record_access                  shift and go to state 31
 
 state 48
 
-    (11) single_type_definition -> ID EQUAL_TO . type_definition SEMI
-    (12) type_definition -> . array_type_definition
-    (13) type_definition -> . record_type_definition
-    (18) array_type_definition -> . ARRAY LBRACKET NUMERO RBRACKET OF tipo_specifier
-    (19) record_type_definition -> . RECORD field_list END SEMI
+    (36) array_access -> ID LBRACKET . expressao RBRACKET
+    (50) expressao -> . expressao PLUS expressao
+    (51) expressao -> . expressao MINUS expressao
+    (52) expressao -> . expressao TIMES expressao
+    (53) expressao -> . expressao DIVIDE expressao
+    (54) expressao -> . termo
+    (55) termo -> . LPAREN expressao RPAREN
+    (56) termo -> . NUMERO
+    (57) termo -> . function_call
+    (58) termo -> . lvalue
+    (59) function_call -> . ID LPAREN args_opt RPAREN
+    (33) lvalue -> . ID
+    (34) lvalue -> . array_access
+    (35) lvalue -> . record_access
+    (36) array_access -> . ID LBRACKET expressao RBRACKET
+    (37) record_access -> . lvalue DOT ID
 
-    ARRAY           shift and go to state 73
-    RECORD          shift and go to state 74
+    LPAREN          shift and go to state 43
+    NUMERO          shift and go to state 44
+    ID              shift and go to state 29
 
-    type_definition                shift and go to state 70
-    array_type_definition          shift and go to state 71
-    record_type_definition         shift and go to state 72
+    expressao                      shift and go to state 76
+    termo                          shift and go to state 42
+    function_call                  shift and go to state 45
+    lvalue                         shift and go to state 46
+    array_access                   shift and go to state 30
+    record_access                  shift and go to state 31
 
 state 49
 
-    (26) tipo_specifier -> ID .
+    (16) single_type_definition -> ID EQUAL_TO type_definition . SEMI
 
-    SEMI            reduce using rule 26 (tipo_specifier -> ID .)
-    COMMA           reduce using rule 26 (tipo_specifier -> ID .)
-    RPAREN          reduce using rule 26 (tipo_specifier -> ID .)
-    VAR             reduce using rule 26 (tipo_specifier -> ID .)
-    BEGIN           reduce using rule 26 (tipo_specifier -> ID .)
+    SEMI            shift and go to state 77
 
 
 state 50
 
-    (17) declaracao_var -> ID COLON tipo_specifier . SEMI
+    (17) type_definition -> array_type_definition .
 
-    SEMI            shift and go to state 75
+    SEMI            reduce using rule 17 (type_definition -> array_type_definition .)
 
 
 state 51
 
-    (23) tipo_specifier -> INTEGER .
+    (18) type_definition -> record_type_definition .
 
-    SEMI            reduce using rule 23 (tipo_specifier -> INTEGER .)
-    COMMA           reduce using rule 23 (tipo_specifier -> INTEGER .)
-    RPAREN          reduce using rule 23 (tipo_specifier -> INTEGER .)
-    VAR             reduce using rule 23 (tipo_specifier -> INTEGER .)
-    BEGIN           reduce using rule 23 (tipo_specifier -> INTEGER .)
+    SEMI            reduce using rule 18 (type_definition -> record_type_definition .)
 
 
 state 52
 
-    (24) tipo_specifier -> REAL .
+    (19) array_type_definition -> ARRAY . LBRACKET NUMERO RBRACKET OF tipo_specifier
 
-    SEMI            reduce using rule 24 (tipo_specifier -> REAL .)
-    COMMA           reduce using rule 24 (tipo_specifier -> REAL .)
-    RPAREN          reduce using rule 24 (tipo_specifier -> REAL .)
-    VAR             reduce using rule 24 (tipo_specifier -> REAL .)
-    BEGIN           reduce using rule 24 (tipo_specifier -> REAL .)
+    LBRACKET        shift and go to state 78
 
 
 state 53
 
-    (25) tipo_specifier -> STRING .
+    (20) record_type_definition -> RECORD . field_list END
+    (21) field_list -> . field_list field_declaration
+    (22) field_list -> . empty
+    (64) empty -> .
 
-    SEMI            reduce using rule 25 (tipo_specifier -> STRING .)
-    COMMA           reduce using rule 25 (tipo_specifier -> STRING .)
-    RPAREN          reduce using rule 25 (tipo_specifier -> STRING .)
-    VAR             reduce using rule 25 (tipo_specifier -> STRING .)
-    BEGIN           reduce using rule 25 (tipo_specifier -> STRING .)
+    END             reduce using rule 64 (empty -> .)
+    ID              reduce using rule 64 (empty -> .)
 
+    field_list                     shift and go to state 79
+    empty                          shift and go to state 80
 
 state 54
 
-    (27) atribuicao -> Variavel ATRIB expressao SEMI .
+    (31) tipo_specifier -> ID .
 
-    VAR             reduce using rule 27 (atribuicao -> Variavel ATRIB expressao SEMI .)
-    DEF             reduce using rule 27 (atribuicao -> Variavel ATRIB expressao SEMI .)
-    RETURN          reduce using rule 27 (atribuicao -> Variavel ATRIB expressao SEMI .)
-    TYPE            reduce using rule 27 (atribuicao -> Variavel ATRIB expressao SEMI .)
-    ID              reduce using rule 27 (atribuicao -> Variavel ATRIB expressao SEMI .)
-    $end            reduce using rule 27 (atribuicao -> Variavel ATRIB expressao SEMI .)
-    END             reduce using rule 27 (atribuicao -> Variavel ATRIB expressao SEMI .)
+    SEMI            reduce using rule 31 (tipo_specifier -> ID .)
+    COMMA           reduce using rule 31 (tipo_specifier -> ID .)
+    RPAREN          reduce using rule 31 (tipo_specifier -> ID .)
+    VAR             reduce using rule 31 (tipo_specifier -> ID .)
+    BEGIN           reduce using rule 31 (tipo_specifier -> ID .)
 
 
 state 55
 
-    (37) param -> ID . COLON tipo_specifier
-
-    COLON           shift and go to state 76
-
-
-state 56
-
-    (28) function_declaration -> DEF ID LPAREN params_opt . RPAREN tipo_retorno_opt function_body
-
-    RPAREN          shift and go to state 77
-
-
-state 57
-
-    (33) params_opt -> params .
-    (35) params -> params . COMMA param
-
-    RPAREN          reduce using rule 33 (params_opt -> params .)
-    COMMA           shift and go to state 78
-
-
-state 58
-
-    (34) params_opt -> empty .
-
-    RPAREN          reduce using rule 34 (params_opt -> empty .)
-
-
-state 59
-
-    (36) params -> param .
-
-    COMMA           reduce using rule 36 (params -> param .)
-    RPAREN          reduce using rule 36 (params -> param .)
-
-
-state 60
-
-    (53) array_access -> ID LBRACKET expressao RBRACKET .
-
-    ATRIB           reduce using rule 53 (array_access -> ID LBRACKET expressao RBRACKET .)
-    DOT             reduce using rule 53 (array_access -> ID LBRACKET expressao RBRACKET .)
-    SEMI            reduce using rule 53 (array_access -> ID LBRACKET expressao RBRACKET .)
-    PLUS            reduce using rule 53 (array_access -> ID LBRACKET expressao RBRACKET .)
-    MINUS           reduce using rule 53 (array_access -> ID LBRACKET expressao RBRACKET .)
-    TIMES           reduce using rule 53 (array_access -> ID LBRACKET expressao RBRACKET .)
-    DIVIDE          reduce using rule 53 (array_access -> ID LBRACKET expressao RBRACKET .)
-    RBRACKET        reduce using rule 53 (array_access -> ID LBRACKET expressao RBRACKET .)
-    RPAREN          reduce using rule 53 (array_access -> ID LBRACKET expressao RBRACKET .)
-    COMMA           reduce using rule 53 (array_access -> ID LBRACKET expressao RBRACKET .)
-
-
-state 61
-
-    (40) expressao -> expressao PLUS expressao .
-    (40) expressao -> expressao . PLUS expressao
-    (41) expressao -> expressao . MINUS expressao
-    (42) expressao -> expressao . TIMES expressao
-    (43) expressao -> expressao . DIVIDE expressao
-
-    SEMI            reduce using rule 40 (expressao -> expressao PLUS expressao .)
-    PLUS            reduce using rule 40 (expressao -> expressao PLUS expressao .)
-    MINUS           reduce using rule 40 (expressao -> expressao PLUS expressao .)
-    RBRACKET        reduce using rule 40 (expressao -> expressao PLUS expressao .)
-    RPAREN          reduce using rule 40 (expressao -> expressao PLUS expressao .)
-    COMMA           reduce using rule 40 (expressao -> expressao PLUS expressao .)
-    TIMES           shift and go to state 43
-    DIVIDE          shift and go to state 44
-
-  ! TIMES           [ reduce using rule 40 (expressao -> expressao PLUS expressao .) ]
-  ! DIVIDE          [ reduce using rule 40 (expressao -> expressao PLUS expressao .) ]
-  ! PLUS            [ shift and go to state 41 ]
-  ! MINUS           [ shift and go to state 42 ]
-
-
-state 62
-
-    (41) expressao -> expressao MINUS expressao .
-    (40) expressao -> expressao . PLUS expressao
-    (41) expressao -> expressao . MINUS expressao
-    (42) expressao -> expressao . TIMES expressao
-    (43) expressao -> expressao . DIVIDE expressao
-
-    SEMI            reduce using rule 41 (expressao -> expressao MINUS expressao .)
-    PLUS            reduce using rule 41 (expressao -> expressao MINUS expressao .)
-    MINUS           reduce using rule 41 (expressao -> expressao MINUS expressao .)
-    RBRACKET        reduce using rule 41 (expressao -> expressao MINUS expressao .)
-    RPAREN          reduce using rule 41 (expressao -> expressao MINUS expressao .)
-    COMMA           reduce using rule 41 (expressao -> expressao MINUS expressao .)
-    TIMES           shift and go to state 43
-    DIVIDE          shift and go to state 44
-
-  ! TIMES           [ reduce using rule 41 (expressao -> expressao MINUS expressao .) ]
-  ! DIVIDE          [ reduce using rule 41 (expressao -> expressao MINUS expressao .) ]
-  ! PLUS            [ shift and go to state 41 ]
-  ! MINUS           [ shift and go to state 42 ]
-
-
-state 63
-
-    (42) expressao -> expressao TIMES expressao .
-    (40) expressao -> expressao . PLUS expressao
-    (41) expressao -> expressao . MINUS expressao
-    (42) expressao -> expressao . TIMES expressao
-    (43) expressao -> expressao . DIVIDE expressao
-
-    SEMI            reduce using rule 42 (expressao -> expressao TIMES expressao .)
-    PLUS            reduce using rule 42 (expressao -> expressao TIMES expressao .)
-    MINUS           reduce using rule 42 (expressao -> expressao TIMES expressao .)
-    TIMES           reduce using rule 42 (expressao -> expressao TIMES expressao .)
-    DIVIDE          reduce using rule 42 (expressao -> expressao TIMES expressao .)
-    RBRACKET        reduce using rule 42 (expressao -> expressao TIMES expressao .)
-    RPAREN          reduce using rule 42 (expressao -> expressao TIMES expressao .)
-    COMMA           reduce using rule 42 (expressao -> expressao TIMES expressao .)
-
-  ! PLUS            [ shift and go to state 41 ]
-  ! MINUS           [ shift and go to state 42 ]
-  ! TIMES           [ shift and go to state 43 ]
-  ! DIVIDE          [ shift and go to state 44 ]
-
-
-state 64
-
-    (43) expressao -> expressao DIVIDE expressao .
-    (40) expressao -> expressao . PLUS expressao
-    (41) expressao -> expressao . MINUS expressao
-    (42) expressao -> expressao . TIMES expressao
-    (43) expressao -> expressao . DIVIDE expressao
-
-    SEMI            reduce using rule 43 (expressao -> expressao DIVIDE expressao .)
-    PLUS            reduce using rule 43 (expressao -> expressao DIVIDE expressao .)
-    MINUS           reduce using rule 43 (expressao -> expressao DIVIDE expressao .)
-    TIMES           reduce using rule 43 (expressao -> expressao DIVIDE expressao .)
-    DIVIDE          reduce using rule 43 (expressao -> expressao DIVIDE expressao .)
-    RBRACKET        reduce using rule 43 (expressao -> expressao DIVIDE expressao .)
-    RPAREN          reduce using rule 43 (expressao -> expressao DIVIDE expressao .)
-    COMMA           reduce using rule 43 (expressao -> expressao DIVIDE expressao .)
-
-  ! PLUS            [ shift and go to state 41 ]
-  ! MINUS           [ shift and go to state 42 ]
-  ! TIMES           [ shift and go to state 43 ]
-  ! DIVIDE          [ shift and go to state 44 ]
-
-
-state 65
-
-    (45) termo -> LPAREN expressao RPAREN .
-
-    SEMI            reduce using rule 45 (termo -> LPAREN expressao RPAREN .)
-    PLUS            reduce using rule 45 (termo -> LPAREN expressao RPAREN .)
-    MINUS           reduce using rule 45 (termo -> LPAREN expressao RPAREN .)
-    TIMES           reduce using rule 45 (termo -> LPAREN expressao RPAREN .)
-    DIVIDE          reduce using rule 45 (termo -> LPAREN expressao RPAREN .)
-    RBRACKET        reduce using rule 45 (termo -> LPAREN expressao RPAREN .)
-    RPAREN          reduce using rule 45 (termo -> LPAREN expressao RPAREN .)
-    COMMA           reduce using rule 45 (termo -> LPAREN expressao RPAREN .)
-
-
-state 66
-
-    (54) function_call -> ID LPAREN args_opt . RPAREN
-
-    RPAREN          shift and go to state 79
-
-
-state 67
-
-    (55) args_opt -> args .
-    (57) args -> args . COMMA expressao
-
-    RPAREN          reduce using rule 55 (args_opt -> args .)
-    COMMA           shift and go to state 80
-
-
-state 68
-
-    (56) args_opt -> empty .
-
-    RPAREN          reduce using rule 56 (args_opt -> empty .)
-
-
-state 69
-
-    (58) args -> expressao .
-    (40) expressao -> expressao . PLUS expressao
-    (41) expressao -> expressao . MINUS expressao
-    (42) expressao -> expressao . TIMES expressao
-    (43) expressao -> expressao . DIVIDE expressao
-
-    COMMA           reduce using rule 58 (args -> expressao .)
-    RPAREN          reduce using rule 58 (args -> expressao .)
-    PLUS            shift and go to state 41
-    MINUS           shift and go to state 42
-    TIMES           shift and go to state 43
-    DIVIDE          shift and go to state 44
-
-
-state 70
-
-    (11) single_type_definition -> ID EQUAL_TO type_definition . SEMI
+    (27) declaracao_var -> ID COLON tipo_specifier . SEMI
 
     SEMI            shift and go to state 81
 
 
+state 56
+
+    (28) tipo_specifier -> INTEGER .
+
+    SEMI            reduce using rule 28 (tipo_specifier -> INTEGER .)
+    COMMA           reduce using rule 28 (tipo_specifier -> INTEGER .)
+    RPAREN          reduce using rule 28 (tipo_specifier -> INTEGER .)
+    VAR             reduce using rule 28 (tipo_specifier -> INTEGER .)
+    BEGIN           reduce using rule 28 (tipo_specifier -> INTEGER .)
+
+
+state 57
+
+    (29) tipo_specifier -> REAL .
+
+    SEMI            reduce using rule 29 (tipo_specifier -> REAL .)
+    COMMA           reduce using rule 29 (tipo_specifier -> REAL .)
+    RPAREN          reduce using rule 29 (tipo_specifier -> REAL .)
+    VAR             reduce using rule 29 (tipo_specifier -> REAL .)
+    BEGIN           reduce using rule 29 (tipo_specifier -> REAL .)
+
+
+state 58
+
+    (30) tipo_specifier -> STRING .
+
+    SEMI            reduce using rule 30 (tipo_specifier -> STRING .)
+    COMMA           reduce using rule 30 (tipo_specifier -> STRING .)
+    RPAREN          reduce using rule 30 (tipo_specifier -> STRING .)
+    VAR             reduce using rule 30 (tipo_specifier -> STRING .)
+    BEGIN           reduce using rule 30 (tipo_specifier -> STRING .)
+
+
+state 59
+
+    (47) param -> ID . COLON tipo_specifier
+
+    COLON           shift and go to state 82
+
+
+state 60
+
+    (38) function_declaration -> DEF ID LPAREN params_opt . RPAREN tipo_retorno_opt function_body
+
+    RPAREN          shift and go to state 83
+
+
+state 61
+
+    (43) params_opt -> params .
+    (45) params -> params . COMMA param
+
+    RPAREN          reduce using rule 43 (params_opt -> params .)
+    COMMA           shift and go to state 84
+
+
+state 62
+
+    (44) params_opt -> empty .
+
+    RPAREN          reduce using rule 44 (params_opt -> empty .)
+
+
+state 63
+
+    (46) params -> param .
+
+    COMMA           reduce using rule 46 (params -> param .)
+    RPAREN          reduce using rule 46 (params -> param .)
+
+
+state 64
+
+    (32) atribuicao -> lvalue ATRIB expressao . SEMI
+    (50) expressao -> expressao . PLUS expressao
+    (51) expressao -> expressao . MINUS expressao
+    (52) expressao -> expressao . TIMES expressao
+    (53) expressao -> expressao . DIVIDE expressao
+
+    SEMI            shift and go to state 85
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    TIMES           shift and go to state 69
+    DIVIDE          shift and go to state 70
+
+
+state 65
+
+    (37) record_access -> lvalue DOT ID .
+
+    ATRIB           reduce using rule 37 (record_access -> lvalue DOT ID .)
+    DOT             reduce using rule 37 (record_access -> lvalue DOT ID .)
+    SEMI            reduce using rule 37 (record_access -> lvalue DOT ID .)
+    PLUS            reduce using rule 37 (record_access -> lvalue DOT ID .)
+    MINUS           reduce using rule 37 (record_access -> lvalue DOT ID .)
+    TIMES           reduce using rule 37 (record_access -> lvalue DOT ID .)
+    DIVIDE          reduce using rule 37 (record_access -> lvalue DOT ID .)
+    RPAREN          reduce using rule 37 (record_access -> lvalue DOT ID .)
+    COMMA           reduce using rule 37 (record_access -> lvalue DOT ID .)
+    RBRACKET        reduce using rule 37 (record_access -> lvalue DOT ID .)
+
+
+state 66
+
+    (42) return_statement -> RETURN expressao SEMI .
+
+    END             reduce using rule 42 (return_statement -> RETURN expressao SEMI .)
+    RETURN          reduce using rule 42 (return_statement -> RETURN expressao SEMI .)
+    ID              reduce using rule 42 (return_statement -> RETURN expressao SEMI .)
+
+
+state 67
+
+    (50) expressao -> expressao PLUS . expressao
+    (50) expressao -> . expressao PLUS expressao
+    (51) expressao -> . expressao MINUS expressao
+    (52) expressao -> . expressao TIMES expressao
+    (53) expressao -> . expressao DIVIDE expressao
+    (54) expressao -> . termo
+    (55) termo -> . LPAREN expressao RPAREN
+    (56) termo -> . NUMERO
+    (57) termo -> . function_call
+    (58) termo -> . lvalue
+    (59) function_call -> . ID LPAREN args_opt RPAREN
+    (33) lvalue -> . ID
+    (34) lvalue -> . array_access
+    (35) lvalue -> . record_access
+    (36) array_access -> . ID LBRACKET expressao RBRACKET
+    (37) record_access -> . lvalue DOT ID
+
+    LPAREN          shift and go to state 43
+    NUMERO          shift and go to state 44
+    ID              shift and go to state 29
+
+    expressao                      shift and go to state 86
+    termo                          shift and go to state 42
+    function_call                  shift and go to state 45
+    lvalue                         shift and go to state 46
+    array_access                   shift and go to state 30
+    record_access                  shift and go to state 31
+
+state 68
+
+    (51) expressao -> expressao MINUS . expressao
+    (50) expressao -> . expressao PLUS expressao
+    (51) expressao -> . expressao MINUS expressao
+    (52) expressao -> . expressao TIMES expressao
+    (53) expressao -> . expressao DIVIDE expressao
+    (54) expressao -> . termo
+    (55) termo -> . LPAREN expressao RPAREN
+    (56) termo -> . NUMERO
+    (57) termo -> . function_call
+    (58) termo -> . lvalue
+    (59) function_call -> . ID LPAREN args_opt RPAREN
+    (33) lvalue -> . ID
+    (34) lvalue -> . array_access
+    (35) lvalue -> . record_access
+    (36) array_access -> . ID LBRACKET expressao RBRACKET
+    (37) record_access -> . lvalue DOT ID
+
+    LPAREN          shift and go to state 43
+    NUMERO          shift and go to state 44
+    ID              shift and go to state 29
+
+    expressao                      shift and go to state 87
+    termo                          shift and go to state 42
+    function_call                  shift and go to state 45
+    lvalue                         shift and go to state 46
+    array_access                   shift and go to state 30
+    record_access                  shift and go to state 31
+
+state 69
+
+    (52) expressao -> expressao TIMES . expressao
+    (50) expressao -> . expressao PLUS expressao
+    (51) expressao -> . expressao MINUS expressao
+    (52) expressao -> . expressao TIMES expressao
+    (53) expressao -> . expressao DIVIDE expressao
+    (54) expressao -> . termo
+    (55) termo -> . LPAREN expressao RPAREN
+    (56) termo -> . NUMERO
+    (57) termo -> . function_call
+    (58) termo -> . lvalue
+    (59) function_call -> . ID LPAREN args_opt RPAREN
+    (33) lvalue -> . ID
+    (34) lvalue -> . array_access
+    (35) lvalue -> . record_access
+    (36) array_access -> . ID LBRACKET expressao RBRACKET
+    (37) record_access -> . lvalue DOT ID
+
+    LPAREN          shift and go to state 43
+    NUMERO          shift and go to state 44
+    ID              shift and go to state 29
+
+    expressao                      shift and go to state 88
+    termo                          shift and go to state 42
+    function_call                  shift and go to state 45
+    lvalue                         shift and go to state 46
+    array_access                   shift and go to state 30
+    record_access                  shift and go to state 31
+
+state 70
+
+    (53) expressao -> expressao DIVIDE . expressao
+    (50) expressao -> . expressao PLUS expressao
+    (51) expressao -> . expressao MINUS expressao
+    (52) expressao -> . expressao TIMES expressao
+    (53) expressao -> . expressao DIVIDE expressao
+    (54) expressao -> . termo
+    (55) termo -> . LPAREN expressao RPAREN
+    (56) termo -> . NUMERO
+    (57) termo -> . function_call
+    (58) termo -> . lvalue
+    (59) function_call -> . ID LPAREN args_opt RPAREN
+    (33) lvalue -> . ID
+    (34) lvalue -> . array_access
+    (35) lvalue -> . record_access
+    (36) array_access -> . ID LBRACKET expressao RBRACKET
+    (37) record_access -> . lvalue DOT ID
+
+    LPAREN          shift and go to state 43
+    NUMERO          shift and go to state 44
+    ID              shift and go to state 29
+
+    expressao                      shift and go to state 89
+    termo                          shift and go to state 42
+    function_call                  shift and go to state 45
+    lvalue                         shift and go to state 46
+    array_access                   shift and go to state 30
+    record_access                  shift and go to state 31
+
 state 71
 
-    (12) type_definition -> array_type_definition .
+    (55) termo -> LPAREN expressao . RPAREN
+    (50) expressao -> expressao . PLUS expressao
+    (51) expressao -> expressao . MINUS expressao
+    (52) expressao -> expressao . TIMES expressao
+    (53) expressao -> expressao . DIVIDE expressao
 
-    SEMI            reduce using rule 12 (type_definition -> array_type_definition .)
+    RPAREN          shift and go to state 90
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    TIMES           shift and go to state 69
+    DIVIDE          shift and go to state 70
 
 
 state 72
 
-    (13) type_definition -> record_type_definition .
+    (59) function_call -> ID LPAREN args_opt . RPAREN
 
-    SEMI            reduce using rule 13 (type_definition -> record_type_definition .)
+    RPAREN          shift and go to state 91
 
 
 state 73
 
-    (18) array_type_definition -> ARRAY . LBRACKET NUMERO RBRACKET OF tipo_specifier
+    (60) args_opt -> args .
+    (62) args -> args . COMMA expressao
 
-    LBRACKET        shift and go to state 82
+    RPAREN          reduce using rule 60 (args_opt -> args .)
+    COMMA           shift and go to state 92
 
 
 state 74
 
-    (19) record_type_definition -> RECORD . field_list END SEMI
-    (20) field_list -> . field_list field_declaration
-    (21) field_list -> . empty
-    (59) empty -> .
+    (61) args_opt -> empty .
 
-    END             reduce using rule 59 (empty -> .)
-    ID              reduce using rule 59 (empty -> .)
+    RPAREN          reduce using rule 61 (args_opt -> empty .)
 
-    field_list                     shift and go to state 83
-    empty                          shift and go to state 84
 
 state 75
 
-    (17) declaracao_var -> ID COLON tipo_specifier SEMI .
+    (63) args -> expressao .
+    (50) expressao -> expressao . PLUS expressao
+    (51) expressao -> expressao . MINUS expressao
+    (52) expressao -> expressao . TIMES expressao
+    (53) expressao -> expressao . DIVIDE expressao
 
-    ID              reduce using rule 17 (declaracao_var -> ID COLON tipo_specifier SEMI .)
-    VAR             reduce using rule 17 (declaracao_var -> ID COLON tipo_specifier SEMI .)
-    DEF             reduce using rule 17 (declaracao_var -> ID COLON tipo_specifier SEMI .)
-    RETURN          reduce using rule 17 (declaracao_var -> ID COLON tipo_specifier SEMI .)
-    TYPE            reduce using rule 17 (declaracao_var -> ID COLON tipo_specifier SEMI .)
-    $end            reduce using rule 17 (declaracao_var -> ID COLON tipo_specifier SEMI .)
-    END             reduce using rule 17 (declaracao_var -> ID COLON tipo_specifier SEMI .)
-    BEGIN           reduce using rule 17 (declaracao_var -> ID COLON tipo_specifier SEMI .)
+    COMMA           reduce using rule 63 (args -> expressao .)
+    RPAREN          reduce using rule 63 (args -> expressao .)
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    TIMES           shift and go to state 69
+    DIVIDE          shift and go to state 70
 
 
 state 76
 
-    (37) param -> ID COLON . tipo_specifier
-    (23) tipo_specifier -> . INTEGER
-    (24) tipo_specifier -> . REAL
-    (25) tipo_specifier -> . STRING
-    (26) tipo_specifier -> . ID
+    (36) array_access -> ID LBRACKET expressao . RBRACKET
+    (50) expressao -> expressao . PLUS expressao
+    (51) expressao -> expressao . MINUS expressao
+    (52) expressao -> expressao . TIMES expressao
+    (53) expressao -> expressao . DIVIDE expressao
 
-    INTEGER         shift and go to state 51
-    REAL            shift and go to state 52
-    STRING          shift and go to state 53
-    ID              shift and go to state 49
+    RBRACKET        shift and go to state 93
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    TIMES           shift and go to state 69
+    DIVIDE          shift and go to state 70
 
-    tipo_specifier                 shift and go to state 85
 
 state 77
 
-    (28) function_declaration -> DEF ID LPAREN params_opt RPAREN . tipo_retorno_opt function_body
-    (38) tipo_retorno_opt -> . COLON COLON tipo_specifier
-    (39) tipo_retorno_opt -> . empty
-    (59) empty -> .
+    (16) single_type_definition -> ID EQUAL_TO type_definition SEMI .
 
-    COLON           shift and go to state 87
-    VAR             reduce using rule 59 (empty -> .)
-    BEGIN           reduce using rule 59 (empty -> .)
+    ID              reduce using rule 16 (single_type_definition -> ID EQUAL_TO type_definition SEMI .)
+    BEGIN           reduce using rule 16 (single_type_definition -> ID EQUAL_TO type_definition SEMI .)
+    TYPE            reduce using rule 16 (single_type_definition -> ID EQUAL_TO type_definition SEMI .)
+    VAR             reduce using rule 16 (single_type_definition -> ID EQUAL_TO type_definition SEMI .)
+    DEF             reduce using rule 16 (single_type_definition -> ID EQUAL_TO type_definition SEMI .)
 
-    tipo_retorno_opt               shift and go to state 86
-    empty                          shift and go to state 88
 
 state 78
 
-    (35) params -> params COMMA . param
-    (37) param -> . ID COLON tipo_specifier
+    (19) array_type_definition -> ARRAY LBRACKET . NUMERO RBRACKET OF tipo_specifier
 
-    ID              shift and go to state 55
+    NUMERO          shift and go to state 94
 
-    param                          shift and go to state 89
 
 state 79
 
-    (54) function_call -> ID LPAREN args_opt RPAREN .
+    (20) record_type_definition -> RECORD field_list . END
+    (21) field_list -> field_list . field_declaration
+    (23) field_declaration -> . ID COLON tipo_specifier SEMI
 
-    SEMI            reduce using rule 54 (function_call -> ID LPAREN args_opt RPAREN .)
-    PLUS            reduce using rule 54 (function_call -> ID LPAREN args_opt RPAREN .)
-    MINUS           reduce using rule 54 (function_call -> ID LPAREN args_opt RPAREN .)
-    TIMES           reduce using rule 54 (function_call -> ID LPAREN args_opt RPAREN .)
-    DIVIDE          reduce using rule 54 (function_call -> ID LPAREN args_opt RPAREN .)
-    RBRACKET        reduce using rule 54 (function_call -> ID LPAREN args_opt RPAREN .)
-    RPAREN          reduce using rule 54 (function_call -> ID LPAREN args_opt RPAREN .)
-    COMMA           reduce using rule 54 (function_call -> ID LPAREN args_opt RPAREN .)
+    END             shift and go to state 95
+    ID              shift and go to state 97
 
+    field_declaration              shift and go to state 96
 
 state 80
 
-    (57) args -> args COMMA . expressao
-    (40) expressao -> . expressao PLUS expressao
-    (41) expressao -> . expressao MINUS expressao
-    (42) expressao -> . expressao TIMES expressao
-    (43) expressao -> . expressao DIVIDE expressao
-    (44) expressao -> . termo
-    (45) termo -> . LPAREN expressao RPAREN
-    (46) termo -> . NUMERO
-    (47) termo -> . function_call
-    (48) termo -> . Variavel
-    (54) function_call -> . ID LPAREN args_opt RPAREN
-    (49) Variavel -> . ID
-    (50) Variavel -> . array_access
-    (51) Variavel -> . record_access
-    (53) array_access -> . ID LBRACKET expressao RBRACKET
-    (52) record_access -> . Variavel DOT ID
+    (22) field_list -> empty .
 
-    LPAREN          shift and go to state 26
-    NUMERO          shift and go to state 27
-    ID              shift and go to state 30
+    END             reduce using rule 22 (field_list -> empty .)
+    ID              reduce using rule 22 (field_list -> empty .)
 
-    expressao                      shift and go to state 90
-    termo                          shift and go to state 25
-    function_call                  shift and go to state 28
-    Variavel                       shift and go to state 29
-    array_access                   shift and go to state 15
-    record_access                  shift and go to state 16
 
 state 81
 
-    (11) single_type_definition -> ID EQUAL_TO type_definition SEMI .
+    (27) declaracao_var -> ID COLON tipo_specifier SEMI .
 
-    ID              reduce using rule 11 (single_type_definition -> ID EQUAL_TO type_definition SEMI .)
-    VAR             reduce using rule 11 (single_type_definition -> ID EQUAL_TO type_definition SEMI .)
-    DEF             reduce using rule 11 (single_type_definition -> ID EQUAL_TO type_definition SEMI .)
-    RETURN          reduce using rule 11 (single_type_definition -> ID EQUAL_TO type_definition SEMI .)
-    TYPE            reduce using rule 11 (single_type_definition -> ID EQUAL_TO type_definition SEMI .)
-    $end            reduce using rule 11 (single_type_definition -> ID EQUAL_TO type_definition SEMI .)
-    END             reduce using rule 11 (single_type_definition -> ID EQUAL_TO type_definition SEMI .)
+    ID              reduce using rule 27 (declaracao_var -> ID COLON tipo_specifier SEMI .)
+    BEGIN           reduce using rule 27 (declaracao_var -> ID COLON tipo_specifier SEMI .)
+    TYPE            reduce using rule 27 (declaracao_var -> ID COLON tipo_specifier SEMI .)
+    VAR             reduce using rule 27 (declaracao_var -> ID COLON tipo_specifier SEMI .)
+    DEF             reduce using rule 27 (declaracao_var -> ID COLON tipo_specifier SEMI .)
 
 
 state 82
 
-    (18) array_type_definition -> ARRAY LBRACKET . NUMERO RBRACKET OF tipo_specifier
+    (47) param -> ID COLON . tipo_specifier
+    (28) tipo_specifier -> . INTEGER
+    (29) tipo_specifier -> . REAL
+    (30) tipo_specifier -> . STRING
+    (31) tipo_specifier -> . ID
 
-    NUMERO          shift and go to state 91
+    INTEGER         shift and go to state 56
+    REAL            shift and go to state 57
+    STRING          shift and go to state 58
+    ID              shift and go to state 54
 
+    tipo_specifier                 shift and go to state 98
 
 state 83
 
-    (19) record_type_definition -> RECORD field_list . END SEMI
-    (20) field_list -> field_list . field_declaration
-    (22) field_declaration -> . ID COLON tipo_specifier SEMI
+    (38) function_declaration -> DEF ID LPAREN params_opt RPAREN . tipo_retorno_opt function_body
+    (48) tipo_retorno_opt -> . COLON COLON tipo_specifier
+    (49) tipo_retorno_opt -> . empty
+    (64) empty -> .
 
-    END             shift and go to state 92
-    ID              shift and go to state 94
+    COLON           shift and go to state 100
+    VAR             reduce using rule 64 (empty -> .)
+    BEGIN           reduce using rule 64 (empty -> .)
 
-    field_declaration              shift and go to state 93
+    tipo_retorno_opt               shift and go to state 99
+    empty                          shift and go to state 101
 
 state 84
 
-    (21) field_list -> empty .
+    (45) params -> params COMMA . param
+    (47) param -> . ID COLON tipo_specifier
 
-    END             reduce using rule 21 (field_list -> empty .)
-    ID              reduce using rule 21 (field_list -> empty .)
+    ID              shift and go to state 59
 
+    param                          shift and go to state 102
 
 state 85
 
-    (37) param -> ID COLON tipo_specifier .
+    (32) atribuicao -> lvalue ATRIB expressao SEMI .
 
-    COMMA           reduce using rule 37 (param -> ID COLON tipo_specifier .)
-    RPAREN          reduce using rule 37 (param -> ID COLON tipo_specifier .)
+    END             reduce using rule 32 (atribuicao -> lvalue ATRIB expressao SEMI .)
+    RETURN          reduce using rule 32 (atribuicao -> lvalue ATRIB expressao SEMI .)
+    ID              reduce using rule 32 (atribuicao -> lvalue ATRIB expressao SEMI .)
 
 
 state 86
 
-    (28) function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt . function_body
-    (29) function_body -> . var_declarations_opt BEGIN lista_comandos END SEMI
-    (30) var_declarations_opt -> . VAR var_declaration_list
-    (31) var_declarations_opt -> . empty
-    (59) empty -> .
+    (50) expressao -> expressao PLUS expressao .
+    (50) expressao -> expressao . PLUS expressao
+    (51) expressao -> expressao . MINUS expressao
+    (52) expressao -> expressao . TIMES expressao
+    (53) expressao -> expressao . DIVIDE expressao
 
-    VAR             shift and go to state 97
-    BEGIN           reduce using rule 59 (empty -> .)
+    SEMI            reduce using rule 50 (expressao -> expressao PLUS expressao .)
+    PLUS            reduce using rule 50 (expressao -> expressao PLUS expressao .)
+    MINUS           reduce using rule 50 (expressao -> expressao PLUS expressao .)
+    RPAREN          reduce using rule 50 (expressao -> expressao PLUS expressao .)
+    COMMA           reduce using rule 50 (expressao -> expressao PLUS expressao .)
+    RBRACKET        reduce using rule 50 (expressao -> expressao PLUS expressao .)
+    TIMES           shift and go to state 69
+    DIVIDE          shift and go to state 70
 
-    function_body                  shift and go to state 95
-    var_declarations_opt           shift and go to state 96
-    empty                          shift and go to state 98
+  ! TIMES           [ reduce using rule 50 (expressao -> expressao PLUS expressao .) ]
+  ! DIVIDE          [ reduce using rule 50 (expressao -> expressao PLUS expressao .) ]
+  ! PLUS            [ shift and go to state 67 ]
+  ! MINUS           [ shift and go to state 68 ]
+
 
 state 87
 
-    (38) tipo_retorno_opt -> COLON . COLON tipo_specifier
+    (51) expressao -> expressao MINUS expressao .
+    (50) expressao -> expressao . PLUS expressao
+    (51) expressao -> expressao . MINUS expressao
+    (52) expressao -> expressao . TIMES expressao
+    (53) expressao -> expressao . DIVIDE expressao
 
-    COLON           shift and go to state 99
+    SEMI            reduce using rule 51 (expressao -> expressao MINUS expressao .)
+    PLUS            reduce using rule 51 (expressao -> expressao MINUS expressao .)
+    MINUS           reduce using rule 51 (expressao -> expressao MINUS expressao .)
+    RPAREN          reduce using rule 51 (expressao -> expressao MINUS expressao .)
+    COMMA           reduce using rule 51 (expressao -> expressao MINUS expressao .)
+    RBRACKET        reduce using rule 51 (expressao -> expressao MINUS expressao .)
+    TIMES           shift and go to state 69
+    DIVIDE          shift and go to state 70
+
+  ! TIMES           [ reduce using rule 51 (expressao -> expressao MINUS expressao .) ]
+  ! DIVIDE          [ reduce using rule 51 (expressao -> expressao MINUS expressao .) ]
+  ! PLUS            [ shift and go to state 67 ]
+  ! MINUS           [ shift and go to state 68 ]
 
 
 state 88
 
-    (39) tipo_retorno_opt -> empty .
+    (52) expressao -> expressao TIMES expressao .
+    (50) expressao -> expressao . PLUS expressao
+    (51) expressao -> expressao . MINUS expressao
+    (52) expressao -> expressao . TIMES expressao
+    (53) expressao -> expressao . DIVIDE expressao
 
-    VAR             reduce using rule 39 (tipo_retorno_opt -> empty .)
-    BEGIN           reduce using rule 39 (tipo_retorno_opt -> empty .)
+    SEMI            reduce using rule 52 (expressao -> expressao TIMES expressao .)
+    PLUS            reduce using rule 52 (expressao -> expressao TIMES expressao .)
+    MINUS           reduce using rule 52 (expressao -> expressao TIMES expressao .)
+    TIMES           reduce using rule 52 (expressao -> expressao TIMES expressao .)
+    DIVIDE          reduce using rule 52 (expressao -> expressao TIMES expressao .)
+    RPAREN          reduce using rule 52 (expressao -> expressao TIMES expressao .)
+    COMMA           reduce using rule 52 (expressao -> expressao TIMES expressao .)
+    RBRACKET        reduce using rule 52 (expressao -> expressao TIMES expressao .)
+
+  ! PLUS            [ shift and go to state 67 ]
+  ! MINUS           [ shift and go to state 68 ]
+  ! TIMES           [ shift and go to state 69 ]
+  ! DIVIDE          [ shift and go to state 70 ]
 
 
 state 89
 
-    (35) params -> params COMMA param .
+    (53) expressao -> expressao DIVIDE expressao .
+    (50) expressao -> expressao . PLUS expressao
+    (51) expressao -> expressao . MINUS expressao
+    (52) expressao -> expressao . TIMES expressao
+    (53) expressao -> expressao . DIVIDE expressao
 
-    COMMA           reduce using rule 35 (params -> params COMMA param .)
-    RPAREN          reduce using rule 35 (params -> params COMMA param .)
+    SEMI            reduce using rule 53 (expressao -> expressao DIVIDE expressao .)
+    PLUS            reduce using rule 53 (expressao -> expressao DIVIDE expressao .)
+    MINUS           reduce using rule 53 (expressao -> expressao DIVIDE expressao .)
+    TIMES           reduce using rule 53 (expressao -> expressao DIVIDE expressao .)
+    DIVIDE          reduce using rule 53 (expressao -> expressao DIVIDE expressao .)
+    RPAREN          reduce using rule 53 (expressao -> expressao DIVIDE expressao .)
+    COMMA           reduce using rule 53 (expressao -> expressao DIVIDE expressao .)
+    RBRACKET        reduce using rule 53 (expressao -> expressao DIVIDE expressao .)
+
+  ! PLUS            [ shift and go to state 67 ]
+  ! MINUS           [ shift and go to state 68 ]
+  ! TIMES           [ shift and go to state 69 ]
+  ! DIVIDE          [ shift and go to state 70 ]
 
 
 state 90
 
-    (57) args -> args COMMA expressao .
-    (40) expressao -> expressao . PLUS expressao
-    (41) expressao -> expressao . MINUS expressao
-    (42) expressao -> expressao . TIMES expressao
-    (43) expressao -> expressao . DIVIDE expressao
+    (55) termo -> LPAREN expressao RPAREN .
 
-    COMMA           reduce using rule 57 (args -> args COMMA expressao .)
-    RPAREN          reduce using rule 57 (args -> args COMMA expressao .)
-    PLUS            shift and go to state 41
-    MINUS           shift and go to state 42
-    TIMES           shift and go to state 43
-    DIVIDE          shift and go to state 44
+    SEMI            reduce using rule 55 (termo -> LPAREN expressao RPAREN .)
+    PLUS            reduce using rule 55 (termo -> LPAREN expressao RPAREN .)
+    MINUS           reduce using rule 55 (termo -> LPAREN expressao RPAREN .)
+    TIMES           reduce using rule 55 (termo -> LPAREN expressao RPAREN .)
+    DIVIDE          reduce using rule 55 (termo -> LPAREN expressao RPAREN .)
+    RPAREN          reduce using rule 55 (termo -> LPAREN expressao RPAREN .)
+    COMMA           reduce using rule 55 (termo -> LPAREN expressao RPAREN .)
+    RBRACKET        reduce using rule 55 (termo -> LPAREN expressao RPAREN .)
 
 
 state 91
 
-    (18) array_type_definition -> ARRAY LBRACKET NUMERO . RBRACKET OF tipo_specifier
+    (59) function_call -> ID LPAREN args_opt RPAREN .
 
-    RBRACKET        shift and go to state 100
+    SEMI            reduce using rule 59 (function_call -> ID LPAREN args_opt RPAREN .)
+    PLUS            reduce using rule 59 (function_call -> ID LPAREN args_opt RPAREN .)
+    MINUS           reduce using rule 59 (function_call -> ID LPAREN args_opt RPAREN .)
+    TIMES           reduce using rule 59 (function_call -> ID LPAREN args_opt RPAREN .)
+    DIVIDE          reduce using rule 59 (function_call -> ID LPAREN args_opt RPAREN .)
+    RPAREN          reduce using rule 59 (function_call -> ID LPAREN args_opt RPAREN .)
+    COMMA           reduce using rule 59 (function_call -> ID LPAREN args_opt RPAREN .)
+    RBRACKET        reduce using rule 59 (function_call -> ID LPAREN args_opt RPAREN .)
 
 
 state 92
 
-    (19) record_type_definition -> RECORD field_list END . SEMI
+    (62) args -> args COMMA . expressao
+    (50) expressao -> . expressao PLUS expressao
+    (51) expressao -> . expressao MINUS expressao
+    (52) expressao -> . expressao TIMES expressao
+    (53) expressao -> . expressao DIVIDE expressao
+    (54) expressao -> . termo
+    (55) termo -> . LPAREN expressao RPAREN
+    (56) termo -> . NUMERO
+    (57) termo -> . function_call
+    (58) termo -> . lvalue
+    (59) function_call -> . ID LPAREN args_opt RPAREN
+    (33) lvalue -> . ID
+    (34) lvalue -> . array_access
+    (35) lvalue -> . record_access
+    (36) array_access -> . ID LBRACKET expressao RBRACKET
+    (37) record_access -> . lvalue DOT ID
 
-    SEMI            shift and go to state 101
+    LPAREN          shift and go to state 43
+    NUMERO          shift and go to state 44
+    ID              shift and go to state 29
 
+    expressao                      shift and go to state 103
+    termo                          shift and go to state 42
+    function_call                  shift and go to state 45
+    lvalue                         shift and go to state 46
+    array_access                   shift and go to state 30
+    record_access                  shift and go to state 31
 
 state 93
 
-    (20) field_list -> field_list field_declaration .
+    (36) array_access -> ID LBRACKET expressao RBRACKET .
 
-    END             reduce using rule 20 (field_list -> field_list field_declaration .)
-    ID              reduce using rule 20 (field_list -> field_list field_declaration .)
+    ATRIB           reduce using rule 36 (array_access -> ID LBRACKET expressao RBRACKET .)
+    DOT             reduce using rule 36 (array_access -> ID LBRACKET expressao RBRACKET .)
+    SEMI            reduce using rule 36 (array_access -> ID LBRACKET expressao RBRACKET .)
+    PLUS            reduce using rule 36 (array_access -> ID LBRACKET expressao RBRACKET .)
+    MINUS           reduce using rule 36 (array_access -> ID LBRACKET expressao RBRACKET .)
+    TIMES           reduce using rule 36 (array_access -> ID LBRACKET expressao RBRACKET .)
+    DIVIDE          reduce using rule 36 (array_access -> ID LBRACKET expressao RBRACKET .)
+    RPAREN          reduce using rule 36 (array_access -> ID LBRACKET expressao RBRACKET .)
+    COMMA           reduce using rule 36 (array_access -> ID LBRACKET expressao RBRACKET .)
+    RBRACKET        reduce using rule 36 (array_access -> ID LBRACKET expressao RBRACKET .)
 
 
 state 94
 
-    (22) field_declaration -> ID . COLON tipo_specifier SEMI
+    (19) array_type_definition -> ARRAY LBRACKET NUMERO . RBRACKET OF tipo_specifier
 
-    COLON           shift and go to state 102
+    RBRACKET        shift and go to state 104
 
 
 state 95
 
-    (28) function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body .
+    (20) record_type_definition -> RECORD field_list END .
 
-    VAR             reduce using rule 28 (function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body .)
-    DEF             reduce using rule 28 (function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body .)
-    RETURN          reduce using rule 28 (function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body .)
-    TYPE            reduce using rule 28 (function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body .)
-    ID              reduce using rule 28 (function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body .)
-    $end            reduce using rule 28 (function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body .)
-    END             reduce using rule 28 (function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body .)
+    SEMI            reduce using rule 20 (record_type_definition -> RECORD field_list END .)
 
 
 state 96
 
-    (29) function_body -> var_declarations_opt . BEGIN lista_comandos END SEMI
+    (21) field_list -> field_list field_declaration .
 
-    BEGIN           shift and go to state 103
+    END             reduce using rule 21 (field_list -> field_list field_declaration .)
+    ID              reduce using rule 21 (field_list -> field_list field_declaration .)
 
 
 state 97
 
-    (30) var_declarations_opt -> VAR . var_declaration_list
-    (15) var_declaration_list -> . var_declaration_list declaracao_var
-    (16) var_declaration_list -> . declaracao_var
-    (17) declaracao_var -> . ID COLON tipo_specifier SEMI
+    (23) field_declaration -> ID . COLON tipo_specifier SEMI
 
-    ID              shift and go to state 19
+    COLON           shift and go to state 105
 
-    var_declaration_list           shift and go to state 104
-    declaracao_var                 shift and go to state 18
 
 state 98
 
-    (31) var_declarations_opt -> empty .
+    (47) param -> ID COLON tipo_specifier .
 
-    BEGIN           reduce using rule 31 (var_declarations_opt -> empty .)
+    COMMA           reduce using rule 47 (param -> ID COLON tipo_specifier .)
+    RPAREN          reduce using rule 47 (param -> ID COLON tipo_specifier .)
 
 
 state 99
 
-    (38) tipo_retorno_opt -> COLON COLON . tipo_specifier
-    (23) tipo_specifier -> . INTEGER
-    (24) tipo_specifier -> . REAL
-    (25) tipo_specifier -> . STRING
-    (26) tipo_specifier -> . ID
+    (38) function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt . function_body
+    (41) function_body -> . var_declarations_opt BEGIN lista_comandos END SEMI
+    (39) var_declarations_opt -> . var_declaration_block
+    (40) var_declarations_opt -> . empty
+    (24) var_declaration_block -> . VAR var_declaration_list
+    (64) empty -> .
 
-    INTEGER         shift and go to state 51
-    REAL            shift and go to state 52
-    STRING          shift and go to state 53
-    ID              shift and go to state 49
+    VAR             shift and go to state 11
+    BEGIN           reduce using rule 64 (empty -> .)
 
-    tipo_specifier                 shift and go to state 105
+    function_body                  shift and go to state 106
+    var_declarations_opt           shift and go to state 107
+    var_declaration_block          shift and go to state 108
+    empty                          shift and go to state 109
 
 state 100
 
-    (18) array_type_definition -> ARRAY LBRACKET NUMERO RBRACKET . OF tipo_specifier
+    (48) tipo_retorno_opt -> COLON . COLON tipo_specifier
 
-    OF              shift and go to state 106
+    COLON           shift and go to state 110
 
 
 state 101
 
-    (19) record_type_definition -> RECORD field_list END SEMI .
+    (49) tipo_retorno_opt -> empty .
 
-    SEMI            reduce using rule 19 (record_type_definition -> RECORD field_list END SEMI .)
+    VAR             reduce using rule 49 (tipo_retorno_opt -> empty .)
+    BEGIN           reduce using rule 49 (tipo_retorno_opt -> empty .)
 
 
 state 102
 
-    (22) field_declaration -> ID COLON . tipo_specifier SEMI
-    (23) tipo_specifier -> . INTEGER
-    (24) tipo_specifier -> . REAL
-    (25) tipo_specifier -> . STRING
-    (26) tipo_specifier -> . ID
+    (45) params -> params COMMA param .
 
-    INTEGER         shift and go to state 51
-    REAL            shift and go to state 52
-    STRING          shift and go to state 53
-    ID              shift and go to state 49
+    COMMA           reduce using rule 45 (params -> params COMMA param .)
+    RPAREN          reduce using rule 45 (params -> params COMMA param .)
 
-    tipo_specifier                 shift and go to state 107
 
 state 103
 
-    (29) function_body -> var_declarations_opt BEGIN . lista_comandos END SEMI
-    (1) lista_comandos -> . lista_comandos comando
-    (2) lista_comandos -> . empty
-    (59) empty -> .
+    (62) args -> args COMMA expressao .
+    (50) expressao -> expressao . PLUS expressao
+    (51) expressao -> expressao . MINUS expressao
+    (52) expressao -> expressao . TIMES expressao
+    (53) expressao -> expressao . DIVIDE expressao
 
-    END             reduce using rule 59 (empty -> .)
-    VAR             reduce using rule 59 (empty -> .)
-    DEF             reduce using rule 59 (empty -> .)
-    RETURN          reduce using rule 59 (empty -> .)
-    TYPE            reduce using rule 59 (empty -> .)
-    ID              reduce using rule 59 (empty -> .)
+    COMMA           reduce using rule 62 (args -> args COMMA expressao .)
+    RPAREN          reduce using rule 62 (args -> args COMMA expressao .)
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    TIMES           shift and go to state 69
+    DIVIDE          shift and go to state 70
 
-    lista_comandos                 shift and go to state 108
-    empty                          shift and go to state 2
 
 state 104
 
-    (30) var_declarations_opt -> VAR var_declaration_list .
-    (15) var_declaration_list -> var_declaration_list . declaracao_var
-    (17) declaracao_var -> . ID COLON tipo_specifier SEMI
+    (19) array_type_definition -> ARRAY LBRACKET NUMERO RBRACKET . OF tipo_specifier
 
-    BEGIN           reduce using rule 30 (var_declarations_opt -> VAR var_declaration_list .)
-    ID              shift and go to state 19
+    OF              shift and go to state 111
 
-    declaracao_var                 shift and go to state 34
 
 state 105
 
-    (38) tipo_retorno_opt -> COLON COLON tipo_specifier .
+    (23) field_declaration -> ID COLON . tipo_specifier SEMI
+    (28) tipo_specifier -> . INTEGER
+    (29) tipo_specifier -> . REAL
+    (30) tipo_specifier -> . STRING
+    (31) tipo_specifier -> . ID
 
-    VAR             reduce using rule 38 (tipo_retorno_opt -> COLON COLON tipo_specifier .)
-    BEGIN           reduce using rule 38 (tipo_retorno_opt -> COLON COLON tipo_specifier .)
+    INTEGER         shift and go to state 56
+    REAL            shift and go to state 57
+    STRING          shift and go to state 58
+    ID              shift and go to state 54
 
+    tipo_specifier                 shift and go to state 112
 
 state 106
 
-    (18) array_type_definition -> ARRAY LBRACKET NUMERO RBRACKET OF . tipo_specifier
-    (23) tipo_specifier -> . INTEGER
-    (24) tipo_specifier -> . REAL
-    (25) tipo_specifier -> . STRING
-    (26) tipo_specifier -> . ID
+    (38) function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body .
 
-    INTEGER         shift and go to state 51
-    REAL            shift and go to state 52
-    STRING          shift and go to state 53
-    ID              shift and go to state 49
+    BEGIN           reduce using rule 38 (function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body .)
+    TYPE            reduce using rule 38 (function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body .)
+    VAR             reduce using rule 38 (function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body .)
+    DEF             reduce using rule 38 (function_declaration -> DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body .)
 
-    tipo_specifier                 shift and go to state 109
 
 state 107
 
-    (22) field_declaration -> ID COLON tipo_specifier . SEMI
+    (41) function_body -> var_declarations_opt . BEGIN lista_comandos END SEMI
 
-    SEMI            shift and go to state 110
+    BEGIN           shift and go to state 113
 
 
 state 108
 
-    (29) function_body -> var_declarations_opt BEGIN lista_comandos . END SEMI
-    (1) lista_comandos -> lista_comandos . comando
-    (3) comando -> . declaracao_var_block
-    (4) comando -> . atribuicao
-    (5) comando -> . function_declaration
-    (6) comando -> . return_statement
-    (7) comando -> . type_declaration_block
-    (14) declaracao_var_block -> . VAR var_declaration_list
-    (27) atribuicao -> . Variavel ATRIB expressao SEMI
-    (28) function_declaration -> . DEF ID LPAREN params_opt RPAREN tipo_retorno_opt function_body
-    (32) return_statement -> . RETURN expressao SEMI
-    (8) type_declaration_block -> . TYPE type_definition_list
-    (49) Variavel -> . ID
-    (50) Variavel -> . array_access
-    (51) Variavel -> . record_access
-    (53) array_access -> . ID LBRACKET expressao RBRACKET
-    (52) record_access -> . Variavel DOT ID
+    (39) var_declarations_opt -> var_declaration_block .
 
-    END             shift and go to state 111
-    VAR             shift and go to state 9
-    DEF             shift and go to state 11
-    RETURN          shift and go to state 13
-    TYPE            shift and go to state 14
-    ID              shift and go to state 12
+    BEGIN           reduce using rule 39 (var_declarations_opt -> var_declaration_block .)
 
-    comando                        shift and go to state 3
-    declaracao_var_block           shift and go to state 4
-    atribuicao                     shift and go to state 5
-    function_declaration           shift and go to state 6
-    return_statement               shift and go to state 7
-    type_declaration_block         shift and go to state 8
-    Variavel                       shift and go to state 10
-    array_access                   shift and go to state 15
-    record_access                  shift and go to state 16
 
 state 109
 
-    (18) array_type_definition -> ARRAY LBRACKET NUMERO RBRACKET OF tipo_specifier .
+    (40) var_declarations_opt -> empty .
 
-    SEMI            reduce using rule 18 (array_type_definition -> ARRAY LBRACKET NUMERO RBRACKET OF tipo_specifier .)
+    BEGIN           reduce using rule 40 (var_declarations_opt -> empty .)
 
 
 state 110
 
-    (22) field_declaration -> ID COLON tipo_specifier SEMI .
+    (48) tipo_retorno_opt -> COLON COLON . tipo_specifier
+    (28) tipo_specifier -> . INTEGER
+    (29) tipo_specifier -> . REAL
+    (30) tipo_specifier -> . STRING
+    (31) tipo_specifier -> . ID
 
-    END             reduce using rule 22 (field_declaration -> ID COLON tipo_specifier SEMI .)
-    ID              reduce using rule 22 (field_declaration -> ID COLON tipo_specifier SEMI .)
+    INTEGER         shift and go to state 56
+    REAL            shift and go to state 57
+    STRING          shift and go to state 58
+    ID              shift and go to state 54
 
+    tipo_specifier                 shift and go to state 114
 
 state 111
 
-    (29) function_body -> var_declarations_opt BEGIN lista_comandos END . SEMI
+    (19) array_type_definition -> ARRAY LBRACKET NUMERO RBRACKET OF . tipo_specifier
+    (28) tipo_specifier -> . INTEGER
+    (29) tipo_specifier -> . REAL
+    (30) tipo_specifier -> . STRING
+    (31) tipo_specifier -> . ID
 
-    SEMI            shift and go to state 112
+    INTEGER         shift and go to state 56
+    REAL            shift and go to state 57
+    STRING          shift and go to state 58
+    ID              shift and go to state 54
 
+    tipo_specifier                 shift and go to state 115
 
 state 112
 
-    (29) function_body -> var_declarations_opt BEGIN lista_comandos END SEMI .
+    (23) field_declaration -> ID COLON tipo_specifier . SEMI
 
-    VAR             reduce using rule 29 (function_body -> var_declarations_opt BEGIN lista_comandos END SEMI .)
-    DEF             reduce using rule 29 (function_body -> var_declarations_opt BEGIN lista_comandos END SEMI .)
-    RETURN          reduce using rule 29 (function_body -> var_declarations_opt BEGIN lista_comandos END SEMI .)
-    TYPE            reduce using rule 29 (function_body -> var_declarations_opt BEGIN lista_comandos END SEMI .)
-    ID              reduce using rule 29 (function_body -> var_declarations_opt BEGIN lista_comandos END SEMI .)
-    $end            reduce using rule 29 (function_body -> var_declarations_opt BEGIN lista_comandos END SEMI .)
-    END             reduce using rule 29 (function_body -> var_declarations_opt BEGIN lista_comandos END SEMI .)
+    SEMI            shift and go to state 116
 
-WARNING: 
-WARNING: Conflicts:
-WARNING: 
-WARNING: shift/reduce conflict for ID in state 17 resolved as shift
-WARNING: shift/reduce conflict for ID in state 31 resolved as shift
+
+state 113
+
+    (41) function_body -> var_declarations_opt BEGIN . lista_comandos END SEMI
+    (8) lista_comandos -> . lista_comandos comando
+    (9) lista_comandos -> . empty
+    (64) empty -> .
+
+    END             reduce using rule 64 (empty -> .)
+    RETURN          reduce using rule 64 (empty -> .)
+    ID              reduce using rule 64 (empty -> .)
+
+    lista_comandos                 shift and go to state 117
+    empty                          shift and go to state 14
+
+state 114
+
+    (48) tipo_retorno_opt -> COLON COLON tipo_specifier .
+
+    VAR             reduce using rule 48 (tipo_retorno_opt -> COLON COLON tipo_specifier .)
+    BEGIN           reduce using rule 48 (tipo_retorno_opt -> COLON COLON tipo_specifier .)
+
+
+state 115
+
+    (19) array_type_definition -> ARRAY LBRACKET NUMERO RBRACKET OF tipo_specifier .
+
+    SEMI            reduce using rule 19 (array_type_definition -> ARRAY LBRACKET NUMERO RBRACKET OF tipo_specifier .)
+
+
+state 116
+
+    (23) field_declaration -> ID COLON tipo_specifier SEMI .
+
+    END             reduce using rule 23 (field_declaration -> ID COLON tipo_specifier SEMI .)
+    ID              reduce using rule 23 (field_declaration -> ID COLON tipo_specifier SEMI .)
+
+
+state 117
+
+    (41) function_body -> var_declarations_opt BEGIN lista_comandos . END SEMI
+    (8) lista_comandos -> lista_comandos . comando
+    (10) comando -> . atribuicao
+    (11) comando -> . return_statement
+    (12) comando -> . function_call SEMI
+    (32) atribuicao -> . lvalue ATRIB expressao SEMI
+    (42) return_statement -> . RETURN expressao SEMI
+    (59) function_call -> . ID LPAREN args_opt RPAREN
+    (33) lvalue -> . ID
+    (34) lvalue -> . array_access
+    (35) lvalue -> . record_access
+    (36) array_access -> . ID LBRACKET expressao RBRACKET
+    (37) record_access -> . lvalue DOT ID
+
+    END             shift and go to state 118
+    RETURN          shift and go to state 28
+    ID              shift and go to state 29
+
+    comando                        shift and go to state 23
+    atribuicao                     shift and go to state 24
+    return_statement               shift and go to state 25
+    function_call                  shift and go to state 26
+    lvalue                         shift and go to state 27
+    array_access                   shift and go to state 30
+    record_access                  shift and go to state 31
+
+state 118
+
+    (41) function_body -> var_declarations_opt BEGIN lista_comandos END . SEMI
+
+    SEMI            shift and go to state 119
+
+
+state 119
+
+    (41) function_body -> var_declarations_opt BEGIN lista_comandos END SEMI .
+
+    BEGIN           reduce using rule 41 (function_body -> var_declarations_opt BEGIN lista_comandos END SEMI .)
+    TYPE            reduce using rule 41 (function_body -> var_declarations_opt BEGIN lista_comandos END SEMI .)
+    VAR             reduce using rule 41 (function_body -> var_declarations_opt BEGIN lista_comandos END SEMI .)
+    DEF             reduce using rule 41 (function_body -> var_declarations_opt BEGIN lista_comandos END SEMI .)
+
