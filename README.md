@@ -1,46 +1,52 @@
-# Compilador Simples para "Paston"
 
-Este projeto é a implementação de um compilador simples para um subconjunto da linguagem Pascal, aqui chamado de "Paston". O compilador foi desenvolvido em Python, utilizando a biblioteca `PLY`, e abrange as principais fases da análise (léxica, sintática e semântica), além da fase de síntese com a geração de Código Intermediário de Três Endereços (TAC).
+# 📘 Compilador Simples para "Paston"
 
-## 📜 Estrutura do Projeto
+Este projeto é a implementação de um compilador simples para um subconjunto da linguagem Pascal, aqui chamado de **"Paston"**.  
+O compilador foi desenvolvido em **Python**, utilizando a biblioteca `PLY`, e abrange as principais fases de compilação: análise **léxica**, **sintática**, **semântica** e **geração de código intermediário** (Código de Três Endereços - TAC).
 
-O repositório está organizado nos seguintes arquivos:
+---
 
--   `lexer.py`: Contém o **analisador léxico**, responsável por converter o código-fonte em uma sequência de tokens.
--   `parser.py`: É o coração do compilador. Inclui:
-    -   O **analisador sintático**, que constrói uma Árvore de Sintaxe Abstrata (AST).
-    -   O **analisador semântico**, que verifica a consistência do código (tipos, declarações, etc.).
-    -   O **gerador de código intermediário**, que traduz a AST para Código de Três Endereços (TAC).
--   `exemplo.pas`: Um arquivo de exemplo com código em "Paston" para testar o compilador.
--   `parsetab.py`: Um arquivo gerado automaticamente pela biblioteca `PLY`. Ele contém as tabelas de análise sintática LALR e não deve ser editado manualmente.
+## 📁 Estrutura do Projeto
+
+- `lexer.py` — **Analisador Léxico**: converte o código-fonte em uma sequência de tokens.
+- `parser.py` — **Analisador Sintático**, **Analisador Semântico** e **Gerador de Código Intermediário**.
+- `exemplo.pas` — Arquivo de teste com código em "Paston".
+- `parsetab.py` — Gerado automaticamente pela biblioteca `PLY`. Não edite manualmente.
+
+---
 
 ## 🚀 Tecnologias Utilizadas
 
--   **Linguagem:** Python 3
--   **Bibliotecas:**
-    -   `PLY (Python Lex-Yacc)`: Uma biblioteca fundamental para a construção de analisadores léxicos e sintáticos em Python.
+- **Linguagem:** Python 3
+- **Bibliotecas:**
+  - [`PLY`](https://www.dabeaz.com/ply/): Implementação de Lex e Yacc para Python.
 
-## ⚙️ Como Começar
+---
 
-Siga estes passos para configurar e executar o compilador em sua máquina local.
+## ⚙️ Como Executar
 
-### Pré-requisitos
+### 1. Pré-requisitos
 
-Certifique-se de que você tem o **Python 3** instalado. Em seguida, instale a única dependência do projeto, a `PLY`:
+Certifique-se de ter o Python 3 instalado.  
+Instale a dependência principal:
 
 ```bash
-pip install ply '''
+pip install ply
+```
 
-## Execução
-Para compilar o código de exemplo, simplesmente execute o arquivo parser.py a partir do seu terminal:
+### 2. Execução
 
-Bash
+Para compilar o código de exemplo, execute:
 
+```bash
 python3 parser.py
-O script irá ler o arquivo exemplo.pas por padrão, processá-lo através das fases do compilador e, se não houver erros, imprimirá o código intermediário gerado no final.
+```
 
-A saída esperada será:
+O script lerá o arquivo `exemplo.pas`, executará todas as fases do compilador e imprimirá o Código Intermediário (TAC), caso não haja erros.
 
+### ✅ Saída Esperada
+
+```text
 --- Iniciando Análise Sintática ---
 --- Análise Sintática Concluída ---
 
@@ -51,118 +57,113 @@ A saída esperada será:
 --- Geração de Código Concluída! ---
 
 Código Intermediário Gerado (TAC):
-t0 := b * 2
-t1 := a + t0
-x := t1
-🧠 Fases do Compilador
-O processo de compilação é dividido em várias etapas-chave. A seguir, detalhamos como cada uma delas é implementada neste projeto.
 
-1. Análise Léxica (lexer.py)
-Objetivo: Ler o código-fonte como texto plano e dividi-lo em pequenos componentes chamados tokens. Cada token representa uma unidade léxica, como uma palavra-chave, um identificador, um número ou um operador.
+t0 := 123
+aluno_temp.matricula := t0
 
-Exemplo:
-Dada a seguinte linha de código em exemplo.pas:
+t1 := 8.5
+aluno_temp.media := t1
 
-Delphi
+minha_turma[1] := aluno_temp
 
+t2 := 456
+minha_turma[2].matricula := t2
+```
+
+---
+
+## 🧠 Fases do Compilador
+
+### 1. 🔍 Análise Léxica (`lexer.py`)
+
+Responsável por identificar **tokens** no código-fonte, como palavras-chave, operadores e identificadores.
+
+#### Exemplo:
+
+Código-fonte:
+
+```pascal
 x := a + b * 2;
-O analisador léxico a converte na seguinte sequência de tokens:
+```
 
-Token
+Tokens gerados:
 
-Valor
+| Token | Valor |
+|-------|-------|
+| ID    | `x`   |
+| ATRIB | `:=`  |
+| ID    | `a`   |
+| PLUS  | `+`   |
+| ID    | `b`   |
+| TIMES | `*`   |
+| NUM   | `2`   |
+| SEMI  | `;`   |
 
-ID
+---
 
-'x'
+### 2. 🏗️ Análise Sintática (`parser.py`)
 
-ATRIB
+Verifica se a sequência de tokens segue as regras da gramática. Constrói uma **Árvore de Sintaxe Abstrata (AST)**.
 
-':='
+#### Exemplo de regra:
 
-ID
-
-'a'
-
-PLUS
-
-'+'
-
-ID
-
-'b'
-
-TIMES
-
-'*'
-
-NUMERO
-
-2
-
-SEMI
-
-';'
-
-
-Exportar para as Planilhas
-Implementação: Em lexer.py, os padrões de cada token são definidos usando expressões regulares. A biblioteca PLY utiliza essas definições para escanear o código e gerar os tokens.
-
-2. Análise Sintática (parser.py)
-Objetivo: Receber a sequência de tokens do analisador léxico e verificar se ela segue a estrutura gramatical da linguagem. Se a estrutura for válida, o analisador sintático constrói uma Árvore de Sintaxe Abstrata (AST), que é uma representação hierárquica do código.
-
-Gramática: A estrutura da linguagem é definida por meio de regras de produção. Por exemplo:
-
-Python
-
-# Uma atribuição é um ID, seguido de ':=', uma expressão e um ';'
+```python
 def p_atribuicao(p):
     '''
     atribuicao : ID ATRIB expressao SEMI
     '''
     p[0] = Atribuicao(var=Variavel(p[1]), expressao=p[3])
-Árvore de Sintaxe Abstrata (AST): Para a expressão x := a + b * 2;, o parser gera a seguinte AST, respeitando a precedência de operadores (* antes de +):
+```
 
-      Atribuicao (:=)
-      /           \
-Variavel(x)    OperacaoBinaria (+)
-                 /                 \
-         Variavel(a)        OperacaoBinaria (*)
-                             /                 \
-                       Variavel(b)           Numero(2)
-3. Análise Semântica (parser.py)
-Objetivo: Analisar a AST para verificar o "significado" e a coerência do código. Esta fase detecta erros que a sintaxe por si só não consegue capturar.
+#### AST gerada para `x := a + b * 2;`:
 
-Verificações Realizadas:
+```
+        Atribuição (:=)
+        /             \
+  Variável(x)      Operação(+)
+                   /           \
+            Variável(a)     Operação(*)
+                             /         \
+                       Variável(b)   Número(2)
+```
 
-Declaração de Variáveis: A variável foi declarada antes de ser usada?
+---
 
-Declarações Múltiplas: Uma variável foi declarada mais de uma vez no mesmo escopo?
+### 3. 🧾 Análise Semântica (`parser.py`)
 
-Checagem de Tipos: Os tipos de dados em uma operação ou atribuição são compatíveis?
+Valida o **significado** do código:
 
-Por exemplo, em x := a + b * 2, o analisador verifica se a e b são numéricos.
+- Verifica se as variáveis foram declaradas.
+- Detecta declarações múltiplas.
+- Faz **checagem de tipos** e permite **coerção segura** (integer → real).
 
-Também é verificado se o tipo do resultado da expressão é compatível com o tipo da variável x.
+Uma **tabela de símbolos** é construída para rastrear tipos e identificadores.  
+O padrão **Visitor** é usado para percorrer a AST e aplicar as regras semânticas.
 
-O compilador permite coerção de tipos (atribuir um integer a uma variável real, mas não o contrário).
+---
 
-Tabela de Símbolos: Para realizar essas verificações, o analisador semântico constrói uma tabela de símbolos, que armazena informações sobre cada identificador, como seu nome e tipo (integer, real, etc.).
+### 4. ⚙️ Geração de Código Intermediário (TAC) (`parser.py`)
 
-Implementação: A classe AnalisadorSemantico utiliza o padrão de projeto Visitor para percorrer cada nó da AST e aplicar as regras semânticas correspondentes.
+Gera um **Código de Três Endereços (TAC)** simples, útil para etapas posteriores de compilação (como otimizações e geração de código de máquina).
 
-4. Geração de Código Intermediário (parser.py)
-Objetivo: Traduzir a AST (já validada) para uma representação de baixo nível, que seja mais fácil de converter para código de máquina. Este projeto gera Código de Três Endereços (TAC).
+#### Exemplo de TAC para `x := a + b * 2;`:
 
-Código de Três Endereços (TAC): É uma sequência de instruções simples, onde cada instrução tem no máximo três operandos (uma operação, um argumento e um destino).
-
-Exemplo: A AST da expressão x := a + b * 2; é traduzida para o seguinte TAC:
-
+```text
 t0 := b * 2
 t1 := a + t0
 x := t1
-t0 e t1 são variáveis temporárias criadas pelo gerador de código.
+```
 
-Cada linha é uma instrução simples e clara, facilitando a otimização e a tradução futura para código de máquina.
+Cada linha representa uma operação simples, com no máximo três elementos: destino, operação, operando.
 
-Implementação: A classe GeradorCI também utiliza o padrão Visitor para percorrer a AST e emitir as instruções TAC correspondentes.
+---
+
+## 🧑‍💻 Contribuindo
+
+Contribuições são bem-vindas! Sinta-se livre para abrir issues ou pull requests para correções, melhorias ou novas funcionalidades.
+
+---
+
+## 📄 Licença
+
+Este projeto é distribuído sob a licença MIT. Consulte o arquivo `LICENSE` para mais detalhes.
